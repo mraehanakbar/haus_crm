@@ -1,0 +1,1 @@
+from . import crm_category,crm_issue
