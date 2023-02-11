@@ -21,9 +21,9 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="issue_problem"/>
-                        <field name="issue_category"/>
-                        <field name="issue_comment"/>
+                        <field name="issue_problem" string="Problem"/>
+                        <field name="issue_category" string="Category"/>
+                        <field name="issue_comment" string="Comment"/>
                         <field name="issue_attachment"/>
                     </group>
                 </sheet>

@@ -22,7 +22,7 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="name"/>
+                        <field name="name" string="Category"/>
                         <field name="category_priority"/>
                     </group>
                 </sheet>
@@ -35,7 +35,7 @@
         <field name="model">crm.category</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name"/>
+                <field name="name" string="Category"/>
                 <field name="category_priority"/>
             </tree>
         </field>
