@@ -8,4 +8,6 @@ class CrmIssue(models.Model):
     _description = "CRM Issue Form"
 
     #Define Some Fields Or Function Here
-    
+    issue_problem = fields.Char(String="Problem")
+    issue_comment = fields.Char(String="Comment")
+    issue_attachment = fields.Binary("Attachment", attachment=True)

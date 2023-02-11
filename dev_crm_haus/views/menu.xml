@@ -10,7 +10,7 @@
     id="crm_issues_master"
     name="Issues"
     parent="crm_root"
-    action=""
+    action="action_issue_register"
     sequence="1"
     />
 

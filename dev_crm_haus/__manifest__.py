@@ -16,6 +16,7 @@
     ],
     'data':[
         'views/category.xml',
+        'views/issue.xml',
         'views/menu.xml',
         'security/ir.model.access.csv',
     ],

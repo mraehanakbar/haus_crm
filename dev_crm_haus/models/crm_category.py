@@ -13,4 +13,4 @@ class CrmCategory(models.Model):
         ('high', 'High'),
         ('medium', 'Medium'),
         ('low', 'Low')
-    ], string="Jenis Kelamin")
+    ], string="Priority")
