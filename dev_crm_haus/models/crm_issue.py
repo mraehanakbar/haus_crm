@@ -9,5 +9,12 @@ class CrmIssue(models.Model):
 
     #Define Some Fields Or Function Here
     issue_problem = fields.Char(String="Problem")
+    issue_category = fields.Many2one("crm.category", String="Category")
     issue_comment = fields.Char(String="Comment")
     issue_attachment = fields.Binary("Attachment", attachment=True)
+
+
+    # @api.dependsOn
+    # def category_name_get(self):
+    #     result = []
+    #     for crm.category in self

@@ -8,7 +8,7 @@ class CrmCategory(models.Model):
     _description = "CRM Category Form"
 
     #Define Some Fields Or Function Here
-    category_name = fields.Char(String="Category")
+    name = fields.Char(String="Name", tracking=True)
     category_priority = fields.Selection([
         ('high', 'High'),
         ('medium', 'Medium'),
