@@ -2,7 +2,7 @@
     'name' : 'Haus CRM',
     'version' : '1.0',
     'summary':'Haus CRM',
-    'sequence':-999,
+    'sequence':-9,
     'description':"""Haus Customer Relationship Management""",
     'category':'Productivity',
     'website':'',
