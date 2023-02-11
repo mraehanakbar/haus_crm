@@ -8,3 +8,4 @@ class CrmIssue(models.Model):
     _description = "CRM Issue Form"
 
     #Define Some Fields Or Function Here
+    
