@@ -42,7 +42,7 @@
                     </group>
                     <group>
                         <field name="issue_attachment" />
-                    </group>s </sheet>
+                    </group></sheet>
             </form>
         </field>
     </record>
