@@ -12,10 +12,6 @@ class CrmIssue(models.Model):
     issue_problem = fields.Char(String="Problem", required=True)
     issue_category = fields.Many2one(
         "crm.category", String="Category", required=True)
+    issue_due_date = fields.Datetime(String="Due Date")
     issue_comment = fields.Text(String="Comment")
     issue_attachment = fields.Binary("Attachment", attachment=True)
-
-    # @api.dependsOn
-    # def category_name_get(self):
-    #     result = []
-    #     for crm.category in self
