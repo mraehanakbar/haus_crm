@@ -1,1 +1,3 @@
 *.pyc
+/dev_crm_haus/__pycache__
+/dev_crm_haus/models/__pycache__

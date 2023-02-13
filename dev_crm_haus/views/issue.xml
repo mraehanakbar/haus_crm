@@ -10,6 +10,7 @@
                 <field name="issue_problem" string="Problem" />
                 <field name="issue_category" string="Category" />
                 <field name="issue_comment" string="Comment" />
+                <field name="issue_due_date" string="Due Date" />
             </tree>
         </field>
     </record>
@@ -38,6 +39,7 @@
                     <group>
                         <field name="issue_problem" string="Problem" />
                         <field name="issue_category" string="Category" />
+                        <field name="issue_due_date" string="Due Date" />
                         <field name="issue_comment" string="Comment" />
                     </group>
                     <group>
