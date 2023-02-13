@@ -9,7 +9,7 @@
 
     <menuitem
         id="crm_issues_master"
-        name="Issues"
+        name="Permasalahan"
         parent="crm_root"
         action="action_issue_register"
         sequence="1"
@@ -17,7 +17,7 @@
 
     <menuitem
         id="crm_category_master"
-        name="Category"
+        name="Kategori"
         parent="crm_root"
         action="action_category_register"
         sequence="2"

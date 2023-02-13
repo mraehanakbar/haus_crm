@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="action_category_register" model="ir.actions.act_window">
-        <field name="name">Create Category</field>
+        <field name="name">Buat Kategori</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">crm.category</field>
         <field name="view_mode">kanban,tree,form</field>
@@ -22,8 +22,8 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="name" string="Category"/>
-                        <field name="category_priority"/>
+                        <field name="name" string="Kategori"/>
+                        <field name="category_priority" string = "Prioritas"/>
                     </group>
                 </sheet>
             </form>
@@ -35,8 +35,8 @@
         <field name="model">crm.category</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name" string="Category"/>
-                <field name="category_priority"/>
+                <field name="name" string="Kategori"/>
+                <field name="category_priority" string = "Prioritas"/>
             </tree>
         </field>
     </record>

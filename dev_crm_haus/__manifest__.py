@@ -16,9 +16,9 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        'views/menu.xml',
         'views/category.xml',
         'views/issue.xml',
+        'views/menu.xml',
     ],
     'demo': [],
     'qweb': [],
