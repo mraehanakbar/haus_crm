@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- list view dari issue -->
+    <record id="view_issue_tree" model="ir.ui.view">
+        <field name="name">bcrm.issue.tree</field>
+        <field name="model">crm.issue</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="issue_problem" string="Problem" />
+                <field name="issue_category" string="Category" />
+                <field name="issue_comment" string="Comment" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- action untuk issue -->
+    <record id="action_issue_register" model="ir.actions.act_window">
+        <field name="name">Create New Issue</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.issue</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create new issue
+            </p>
+        </field>
+    </record>
+
+    <!-- form view dari issue -->
+    <record id="view_issue_form" model="ir.ui.view">
+        <field name="name">crm.issue.form</field>
+        <field name="model">crm.issue</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="issue_problem" string="Problem" />
+                        <field name="issue_category" string="Category" />
+                        <field name="issue_comment" string="Comment" />
+                    </group>
+                    <group>
+                        <field name="issue_attachment" />
+                    </group></sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- search filter untuk issue -->
+    <record id="view_issue_search" model="ir.ui.view">
+        <field name="name">crm.issue.search</field>
+        <field name="model">crm.issue</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="issue_problem" string="Problem Issue" />
+                <filter name="group_by_category" string="Category"
+                    context="{'group_by': 'issue_category'}" />
+                <searchpanel>
+                    <field name="issue_category" String="Category" icon="fa-users" select="multi"
+                        enable_countesr="1" />
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+
+</odoo>
