@@ -9,9 +9,13 @@ class CrmIssue(models.Model):
     _description = "CRM Issue Form"
 
     # Define Some Fields Or Function Here
+    employee_id = fields.Many2one(
+        "employee.data", String="Employee", required=True)
     issue_problem = fields.Char(String="Problem", required=True)
     issue_category = fields.Many2one(
         "crm.category", String="Category", required=True)
+    issue_departement = fields.Selection(
+        String="Departemen", related='employee_id.organization_employee')
     issue_due_date = fields.Datetime(String="Due Date")
     issue_comment = fields.Text(String="Comment")
     issue_attachment = fields.Binary("Attachment", attachment=True)
