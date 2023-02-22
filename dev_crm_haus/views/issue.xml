@@ -7,7 +7,6 @@
         <field name="model">crm.issue</field>
         <field name="arch" type="xml">
             <tree>
-
                 <field name="issue_problem" string="Permasalahan" />
                 <field name="issue_category" string="Kategori" />
                 <field name="issue_comment" string="Komentar" />
@@ -37,8 +36,8 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="employee_id" String="Karyawab"></field>
-                        <field name="issue_departement" String="Departemen"></field>
+                        <field name="employee_id" string="Karyawan"></field>
+                        <field name="issue_departement" string="Departemen"></field>
                         <field name="issue_problem" string="Permasalahan" />
                         <field name="issue_category" string="Kategori" />
                         <field name="issue_comment" string="Komentar" />
