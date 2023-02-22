@@ -10,7 +10,11 @@ class CrmIssue(models.Model):
 
     # Define Some Fields Or Function Here
     employee_id = fields.Many2one(
-        "employee.data", String="Employee", required=True)
+        "employee.data", String="Employee", compute ='_get_current_user', required=True)
+    _defaults = {
+        'status_by': lambda self, cr, uid, context:
+    self.pool.get('res.users').browse(cr, uid, uid, context=context).name,
+    }
     issue_problem = fields.Char(String="Problem", required=True)
     issue_category = fields.Many2one(
         "crm.category", String="Category", required=True)
@@ -19,3 +23,8 @@ class CrmIssue(models.Model):
     issue_due_date = fields.Datetime(String="Due Date")
     issue_comment = fields.Text(String="Comment")
     issue_attachment = fields.Binary("Attachment", attachment=True)
+    
+    @api.depends('employee_id')
+    def _get_current_user(self):
+        for rec in self:
+           rec.employee_id = self.env.user.employee_id.id
