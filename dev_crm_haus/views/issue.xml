@@ -37,7 +37,8 @@
                 <sheet>
                     <group>
                         <field name="employee_id" string="Karyawan"></field>
-                        <field name="issue_departement" string="Departemen"></field>
+                        <field name="department" string="Departemen"></field>
+                        <field name="issue_department" string="Departemen yang bermasalah"></field>
                         <field name="issue_problem" string="Permasalahan" />
                         <field name="issue_category" string="Kategori" />
                         <field name="issue_comment" string="Komentar" />
