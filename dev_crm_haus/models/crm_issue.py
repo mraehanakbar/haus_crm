@@ -30,11 +30,15 @@ class CrmIssue(models.Model):
     issue_attachment = fields.Binary("Attachment", attachment=True)
     
     employee_id = fields.Many2one(
-    "employee.data", String="Employee", required=True)
+    "employee.data", String="Employee", defaults = lambda self: self.env.user, required=True)
     department = fields.Selection(String="Departemen", related='employee_id.organization_employee')
 
     issue_department = fields.Selection(department_list)
 
+    # @api.depends('employee_id')
+    # def _get_current_user(self):
+    #     for rec in self:
+    #         rec.employee_id = self.env.user.employee_id.id
 
 # Random function
     # @api.multi
@@ -44,11 +48,3 @@ class CrmIssue(models.Model):
     #     temp = self.env.cr
     #     for rec in self.env.cr.fetchall():
     #         return {'domain': {'employee_id.organization_employee'}}
-#    _defaults = {
-#       'status_by': lambda self, cr, uid, context:
-#   self.pool.get('res.users').browse(cr, uid, uid, context=context).name,
-#    }
-#    @api.depends('employee_id')
-#    def _get_current_user(self):
-#        for rec in self:
-#           rec.employee_id = self.env.user.employee_id.id
