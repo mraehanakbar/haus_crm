@@ -7,23 +7,23 @@
         <field name="model">crm.issue</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="issue_problem" string="Permasalahan" />
-                <field name="issue_category" string="Kategori" />
-                <field name="issue_comment" string="Komentar" />
+                <field name="issue_problem" string="Issues" />
+                <field name="issue_category" string="Category" />
+                <field name="issue_comment" string="Comment" />
             </tree>
         </field>
     </record>
 
     <!-- action untuk issue -->
     <record id="action_issue_register" model="ir.actions.act_window">
-        <field name="name">Buat Permasalahan Baru</field>
+        <field name="name">Create New Issues</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">crm.issue</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Buat Permasalahan Baru
+                Create New Issues
             </p>
         </field>
     </record>
@@ -36,16 +36,21 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="employee_id" string="Karyawan"></field>
-                        <field name="department" string="Departemen"></field>
-                        <field name="department_reporter"></field>                        
-                        <field name="temporary_location_selection" ></field>
-                        <field name="issue_problem" string="Permasalahan" />
-                        <field name="issue_category" string="Kategori" />
-                        <field name="issue_comment" string="Komentar" />
+                        <field name="reporter_name" string="Reporter Name"></field>
+                        <field name="department_reporter" string = "Department Reporter"></field>                        
                     </group>
+                    <sheet>
                     <group>
-                        <field name="issue_attachment" string="Lampiran" />
+                        <field name="employee_id" string="Employee"></field>
+                        <field name="department" string="Departement"></field>
+                        <field name="temporary_location_selection" ></field>
+                        <field name="issue_problem" string="Issues" />
+                        <field name="issue_category" string="Category" />
+                        <field name="issue_comment" string="Comment" />
+                    </group>
+                    </sheet>
+                    <group>
+                        <field name="issue_attachment" string="Attachment" />
                     </group>
                 </sheet>
             </form>
@@ -58,11 +63,11 @@
         <field name="model">crm.issue</field>
         <field name="arch" type="xml">
             <search>
-                <field name="issue_problem" string="Permasalahan" />
-                <filter name="group_by_category" string="Kategori"
+                <field name="issue_problem" string="Issues" />
+                <filter name="group_by_category" string="Category"
                     context="{'group_by': 'issue_category'}" />
                 <searchpanel>
-                    <field name="issue_category" String="Kategori" icon="fa-users" select="multi"
+                    <field name="issue_category" String="Category" icon="fa-users" select="multi"
                         enable_countesr="1" />
                 </searchpanel>
             </search>

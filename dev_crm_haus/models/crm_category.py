@@ -10,7 +10,7 @@ class CrmCategory(models.Model):
     #Define Some Fields Or Function Here
     name = fields.Char(String="Name", tracking=True)
     category_priority = fields.Selection([
-        ('tinggi', 'Tinggi'),
-        ('sedang', 'Sedang'),
-        ('rendah', 'Rendah')
+        ('high', 'High'),
+        ('medium', 'Medium'),
+        ('low', 'Low')
     ], string="Priority")

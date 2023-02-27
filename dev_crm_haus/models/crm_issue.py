@@ -257,7 +257,15 @@ class CrmIssue(models.Model):
     department = fields.Selection(String="Departemen", related='employee_id.organization_employee')
 
     #Tambahin fungsi get_name_user
-
+    def get_name_user(self):
+        try:
+            search_data = self.env['employee.data'].search([('email_employee', '=', self.env.user.login)])
+            name = search_data.mapped('first_name_employee')[0]
+           # last_name = search_data.mapped('last_name_employee')[0]
+            return name
+        except:
+            return ''
+            
     def get_department_user(self):
         try:
             search_data = self.env['employee.data'].search([('email_employee', '=', self.env.user.login)])
@@ -266,8 +274,8 @@ class CrmIssue(models.Model):
         except:
             return ''
     
-    login_user = fields.Many2one('res.users', string="Reporter Name", index=True, default=lambda self: self.env.user.login)
     #Tambahin nama user (first_name + last_name)
+    reporter_name = fields.Char(String="Reporter Name", readonly=True ,default=get_name_user)
     department_reporter = fields.Char(String="Halo", readonly=True ,default=get_department_user)
 
     temporary_location_selection = fields.Selection(site_list,
