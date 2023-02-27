@@ -233,8 +233,7 @@ site_list = [('HAUS! JKT - BINUS 1', 'HAUS! BINUS 1'),
     ('HAUS! BGR - CIKARET CIBINONG', 'HAUS! BGR - CIKARET CIBINONG'),
     ('HAUS! BDG - RANCAEKEK', 'HAUS! BDG - RANCAEKEK'),
     ('HAUS! BKS - GRAND WISATA', 'HAUS! BKS - GRAND WISATA'),
-    ('HAUS! BKS - KEMANG RAYA JATICEMPAKA'),
-    ('HAUS! BKS - KEMANG RAYA JATICEMPAKA'),
+    ('HAUS! BKS - KEMANG RAYA JATICEMPAKA', 'HAUS! BKS - KEMANG RAYA JATICEMPAKA'),
     ('HAUS! BKS - PLASA CIBUBUR', 'HAUS! BKS - PLASA CIBUBUR'),
     ('Haus Office Meruya', 'Haus Office Meruya'),
     ('Haus Office Sastra Graha', 'Haus Office Sastra Graha'),]
@@ -244,8 +243,6 @@ class CrmIssue(models.Model):
     _description = "CRM Issue Form"
 
     # Define Some Fields Or Function Here
-
-
     issue_problem = fields.Char(String="Problem", required=True)
     issue_category = fields.Many2one(
         "crm.category", String="Category", required=True)
@@ -254,23 +251,25 @@ class CrmIssue(models.Model):
     issue_comment = fields.Text(String="Comment")
     issue_attachment = fields.Binary("Attachment", attachment=True)
     
+
     employee_id = fields.Many2one(
     "employee.data", String="Employee", defaults = lambda self: self.env.user, required=True)
     department = fields.Selection(String="Departemen", related='employee_id.organization_employee')
 
-    temporary_location_selection = fields.Selection(site_list[:5],
+    #Tambahin fungsi get_name_user
+
+    def get_department_user(self):
+        try:
+            search_data = self.env['employee.data'].search([('email_employee', '=', self.env.user.login)])
+            position = search_data.mapped('organization_employee')[0]
+            return position
+        except:
+            return ''
+    
+    login_user = fields.Many2one('res.users', string="Reporter Name", index=True, default=lambda self: self.env.user.login)
+    #Tambahin nama user (first_name + last_name)
+    department_reporter = fields.Char(String="Halo", readonly=True ,default=get_department_user)
+
+    temporary_location_selection = fields.Selection(site_list,
     string="Sites Selection",default="Haus Office Meruya")
 
-    # @api.depends('employee_id')
-    # def _get_current_user(self):
-    #     for rec in self:
-    #         rec.employee_id = self.env.user.employee_id.id
-
-# Random function
-    # @api.multi
-    # def get_dep_rec(self):
-    #     sql = "SELECT DISTINCT organization_employee FROM employee.data"
-    #     self.env.cr.execute(sql)
-    #     temp = self.env.cr
-    #     for rec in self.env.cr.fetchall():
-    #         return {'domain': {'employee_id.organization_employee'}}

@@ -38,6 +38,7 @@
                     <group>
                         <field name="employee_id" string="Karyawan"></field>
                         <field name="department" string="Departemen"></field>
+                        <field name="department_reporter"></field>                        
                         <field name="temporary_location_selection" ></field>
                         <field name="issue_problem" string="Permasalahan" />
                         <field name="issue_category" string="Kategori" />
