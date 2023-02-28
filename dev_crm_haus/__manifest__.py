@@ -12,6 +12,7 @@
         'mail',
         'website_slides',
         'board',
+        'dev_employee_master_data',
 
     ],
     'data': [
