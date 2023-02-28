@@ -3,7 +3,7 @@
 
     <!-- list view dari issue -->
     <record id="view_issue_tree" model="ir.ui.view">
-        <field name="name">bcrm.issue.tree</field>
+        <field name="name">crm.issue.tree</field>
         <field name="model">crm.issue</field>
         <field name="arch" type="xml">
             <tree>
@@ -51,6 +51,7 @@
                     </sheet>
                     <group>
                         <field name="issue_attachment" string="Attachment" />
+                        <field name="temporary_location_selection" />
                     </group>
                 </sheet>
             </form>

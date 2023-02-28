@@ -2,6 +2,7 @@ from email.policy import default
 from odoo import api, fields, models, _
 from datetime import datetime
 
+
 site_list = [('HAUS! JKT - BINUS 1', 'HAUS! BINUS 1'),
     ('HAUS! DPK - GUNADARMA', 'HAUS! DEPOK'),
     ('HAUS! TNG - KARANG TENGAH', 'HAUS! KARANG TENGAH'),
@@ -237,6 +238,10 @@ site_list = [('HAUS! JKT - BINUS 1', 'HAUS! BINUS 1'),
     ('HAUS! BKS - PLASA CIBUBUR', 'HAUS! BKS - PLASA CIBUBUR'),
     ('Haus Office Meruya', 'Haus Office Meruya'),
     ('Haus Office Sastra Graha', 'Haus Office Sastra Graha'),]
+    
+    
+import pandas as pd
+
 class CrmIssue(models.Model):
     _name = "crm.issue"
     _inherit = ["mail.thread", "mail.activity.mixin"]
@@ -250,6 +255,7 @@ class CrmIssue(models.Model):
     issue_due_date = fields.Datetime(String="Due Date")
     issue_comment = fields.Text(String="Comment")
     issue_attachment = fields.Binary("Attachment", attachment=True)
+
     
 
     employee_id = fields.Many2one(
@@ -280,4 +286,3 @@ class CrmIssue(models.Model):
 
     temporary_location_selection = fields.Selection(site_list,
     string="Sites Selection",default="Haus Office Meruya")
-
