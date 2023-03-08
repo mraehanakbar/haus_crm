@@ -258,6 +258,8 @@ class CrmIssue(models.Model):
     issue_category = fields.Many2one(
         "crm.category", String="Category", required=True)
 
+    created_at = fields.Datetime(String = "Created At", readonly=True, default=lambda self: fields.Datetime.to_string(datetime.now()))
+
     issue_due_date = fields.Datetime(String="Due Date")
     issue_comment = fields.Text(String="Comment")
     issue_attachment = fields.Binary("Attachment", attachment=True)
@@ -298,4 +300,4 @@ class CrmIssue(models.Model):
 
     # Nambah priority
     priority = fields.Selection(
-        [('0', 'Normal'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High'),], string='Priority', default='1')
+        [('1', 'Low'), ('2', 'Medium'), ('3', 'High'),], string='Priority', default='1')

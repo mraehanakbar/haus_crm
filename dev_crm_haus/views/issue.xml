@@ -36,30 +36,31 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <div class="oe_title">
-                        <h1>
-                            <field name="priority" widget="priority" class='mr-3' />
-                        </h1>
-                    </div>
-                    <group>
-                        <field name="reporter_name" string="Reporter Name"></field>
-                        <field name="department_reporter" string="Department Reporter"></field>
-                        <field name="issue_due_date" string="Tanggal Report"></field>
-                    </group>
-                    <sheet>
+                    <div class="mx-4">
+                        <group>
+                            <group>
+                                <div>
+                                <h1>Laporan Pembuatan Issue</h1>
+                                <h6><field name="created_at"></field></h6></div>
+                            </group>
+                            <group>
+                                <field name="reporter_name" string="Reporter Name"></field>
+                                <field name="department_reporter" string="Department Reporter"></field>
+                            </group>
+                        </group>
                         <group>
                             <field name="employee_id" string="Employee"></field>
                             <field name="department" string="Departement"></field>
                             <field name="temporary_location_selection"></field>
                             <field name="issue_problem" string="Issues" />
                             <field name="issue_category" string="Category" />
+                            <field name="priority"/>
+                            <field name="issue_due_date" string="Due Date"></field>
                             <field name="issue_comment" string="Comment" />
+                            <field name="temporary_location_selection" />
+                            <field name="issue_attachment" string="Attachment" />
                         </group>
-                    </sheet>
-                    <group>
-                        <field name="issue_attachment" string="Attachment" />
-                        <field name="temporary_location_selection" />
-                    </group>
+                    </div>
                 </sheet>
             </form>
         </field>
