@@ -49,12 +49,12 @@
                             </group>
                         </group>
                         <group>
+                            <field name="priority" widget="priority"/>
                             <field name="employee_id" string="Employee"></field>
                             <field name="department" string="Departement"></field>
                             <field name="temporary_location_selection"></field>
                             <field name="issue_problem" string="Issues" />
                             <field name="issue_category" string="Category" />
-                            <field name="priority"/>
                             <field name="issue_due_date" string="Due Date"></field>
                             <field name="issue_comment" string="Comment" />
                             <field name="temporary_location_selection" />

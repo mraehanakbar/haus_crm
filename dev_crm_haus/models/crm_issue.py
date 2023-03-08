@@ -300,4 +300,4 @@ class CrmIssue(models.Model):
 
     # Nambah priority
     priority = fields.Selection(
-        [('1', 'Low'), ('2', 'Medium'), ('3', 'High'),], string='Priority', default='1')
+        [('0', 'Not Important'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High'),], string='Priority', default='1')
