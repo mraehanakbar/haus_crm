@@ -59,6 +59,7 @@
                             <field name="issue_comment" string="Comment" />
                             <field name="temporary_location_selection" />
                             <field name="issue_attachment" string="Attachment" />
+                            <button name="notif_email" type="object" action="notif_email">KIRIM</button>
                         </group>
                     </div>
                 </sheet>
