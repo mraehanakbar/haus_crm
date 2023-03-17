@@ -40,8 +40,11 @@
                         <group>
                             <group>
                                 <div>
-                                <h1>Laporan Pembuatan Issue</h1>
-                                <h6><field name="created_at"></field></h6></div>
+                                    <h1>Laporan Pembuatan Issue</h1>
+                                    <h6>
+                                        <field name="created_at"></field>
+                                    </h6>
+                                </div>
                             </group>
                             <group>
                                 <field name="reporter_name" string="Reporter Name"></field>
@@ -49,7 +52,7 @@
                             </group>
                         </group>
                         <group>
-                            <field name="priority" widget="priority"/>
+                            <field name="priority" widget="priority" />
                             <field name="employee_id" string="Employee"></field>
                             <field name="department" string="Departement"></field>
                             <field name="temporary_location_selection"></field>
@@ -59,7 +62,10 @@
                             <field name="issue_comment" string="Comment" />
                             <field name="temporary_location_selection" />
                             <field name="issue_attachment" string="Attachment" />
-                            <button name="notif_email" type="object" action="notif_email">KIRIM</button>
+                            <!-- jika mau pakek tombol bisa di undo comment sama functionnya di
+                            model issue -->
+                            <!-- <button name="notif_email" type="object"
+                            action="notif_email">KIRIM</button> -->
                         </group>
                     </div>
                 </sheet>

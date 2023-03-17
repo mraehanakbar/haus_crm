@@ -258,10 +258,11 @@ class CrmIssue(models.Model):
     issue_category = fields.Many2one(
         "crm.category", String="Category", required=True)
 
-    created_at = fields.Datetime(String = "Created At", readonly=True, default=lambda self: fields.Datetime.to_string(datetime.now()))
+    created_at = fields.Datetime(String="Created At", readonly=True,
+                                 default=lambda self: fields.Datetime.to_string(datetime.now()))
 
     issue_due_date = fields.Datetime(String="Due Date")
-    issue_comment = fields.Text(String="Comment")
+    issue_comment = fields.Text(String="Comment", required=True)
     issue_attachment = fields.Binary("Attachment", attachment=True)
 
     employee_id = fields.Many2one(
@@ -269,7 +270,6 @@ class CrmIssue(models.Model):
     department = fields.Selection(
         String="Departemen", related='employee_id.organization_employee')
     employee_name = fields.Char(related='employee_id.first_name_employee')
-    # employee_assign_gmail = 
 
     # Tambahin fungsi get_name_user
     def get_name_user(self):
@@ -300,20 +300,19 @@ class CrmIssue(models.Model):
     temporary_location_selection = fields.Selection(site_list,
                                                     string="Sites Selection", default="Haus Office Meruya")
 
-    def notif_email(self):
-        template_data = {
-            'subject': 'Haus Issue Letter',
-            'body_html': f'Dear {self.employee_name} kamu mendapatkan issue yaitu {self.issue_problem} dari {self.reporter_name} di {self.temporary_location_selection} pada {self.created_at} dengan kategori {self.issue_category.name} dan prioritas {self.priority} dengan deadline {self.issue_due_date} dan komentar {self.issue_comment}',
-            'email_from': 'hrdummyhaus1@gmail.com',
-            'auto_delete': True,
-            'email_to': 'anakbaikok575@gmail.com', #ini emailnya belum bisa sesuai ke yang ngirim
-            
-        }
-        mail_id = self.env['mail.mail'].sudo().create(template_data)
-        mail_id.sudo().send()
-
     # Nambah priority
     priority = fields.Selection(
         [('0', 'Not Important'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High'),], string='Priority', default='1')
 
-    
+    # def notif_email(self):
+    #     template_data = {
+    #         'subject': 'Haus Issue Letter',
+    #         'body_html': f'<h1>Dear {self.employee_name}</h1> <h2> kamu mendapatkan masalah/issue berupa {self.issue_problem} dari {self.reporter_name} di cabang {self.temporary_location_selection} </h2>  <p> pada tanggal <b>{self.created_at}</b> dengan kategori {self.issue_category.name} dan prioritas {self.priority} dengan deadline <b>{self.issue_due_date}</b> dengan catatan {self.issue_comment} </p>',
+    #         'email_from': 'hrdummyhaus1@gmail.com',
+    #         'auto_delete': True,
+    #         # ini emailnya belum bisa sesuai ke yang ngirim
+    #         'email_to': 'jokopranowow99@gmail.com',
+
+    #     }
+    #     mail_id = self.env['mail.mail'].sudo().create(template_data)
+    #     mail_id.sudo().send()
