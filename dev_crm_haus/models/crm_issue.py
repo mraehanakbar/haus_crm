@@ -268,6 +268,8 @@ class CrmIssue(models.Model):
         "employee.data", String="Employee", defaults=lambda self: self.env.user, required=True)
     department = fields.Selection(
         String="Departemen", related='employee_id.organization_employee')
+    employee_name = fields.Char(related='employee_id.first_name_employee')
+    # employee_assign_gmail = 
 
     # Tambahin fungsi get_name_user
     def get_name_user(self):
@@ -298,6 +300,20 @@ class CrmIssue(models.Model):
     temporary_location_selection = fields.Selection(site_list,
                                                     string="Sites Selection", default="Haus Office Meruya")
 
+    def notif_email(self):
+        template_data = {
+            'subject': 'Haus Issue Letter',
+            'body_html': f'Dear {self.employee_name} kamu mendapatkan issue yaitu {self.issue_problem} dari {self.reporter_name} di {self.temporary_location_selection} pada {self.created_at} dengan kategori {self.issue_category.name} dan prioritas {self.priority} dengan deadline {self.issue_due_date} dan komentar {self.issue_comment}',
+            'email_from': 'hrdummyhaus1@gmail.com',
+            'auto_delete': True,
+            'email_to': 'anakbaikok575@gmail.com', #ini emailnya belum bisa sesuai ke yang ngirim
+            
+        }
+        mail_id = self.env['mail.mail'].sudo().create(template_data)
+        mail_id.sudo().send()
+
     # Nambah priority
     priority = fields.Selection(
         [('0', 'Not Important'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High'),], string='Priority', default='1')
+
+    
