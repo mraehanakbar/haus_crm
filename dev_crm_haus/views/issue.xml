@@ -64,8 +64,8 @@
                             <field name="issue_attachment" string="Attachment" />
                             <!-- jika mau pakek tombol bisa di undo comment sama functionnya di
                             model issue -->
-                            <!-- <button name="notif_email" type="object"
-                            action="notif_email">KIRIM</button> -->
+                            <button name="notif_email" type="object"
+                            action="notif_email">KIRIM</button>
                         </group>
                     </div>
                 </sheet>
