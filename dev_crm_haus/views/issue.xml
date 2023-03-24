@@ -60,7 +60,6 @@
                             <field name="issue_category" string="Category" />
                             <field name="issue_due_date" string="Due Date"></field>
                             <field name="issue_comment" string="Comment" />
-                            <field name="temporary_location_selection" />
                             <field name="issue_attachment" string="Attachment" />
                             <!-- jika mau pakek tombol bisa di undo comment sama functionnya di
                             model issue -->
