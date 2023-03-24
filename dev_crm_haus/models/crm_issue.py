@@ -270,14 +270,13 @@ class CrmIssue(models.Model):
     department = fields.Selection(
         String="Departemen", related='employee_id.organization_employee')
     employee_name = fields.Char(related='employee_id.first_name_employee')
+    employee_email = fields.Char(related='employee_id.email_employee')
 
-    # Tambahin fungsi get_name_user
     def get_name_user(self):
         try:
             search_data = self.env['employee.data'].search(
                 [('email_employee', '=', self.env.user.login)])
             name = search_data.mapped('first_name_employee')[0]
-           # last_name = search_data.mapped('last_name_employee')[0]
             return name
         except:
             return ''
@@ -300,19 +299,21 @@ class CrmIssue(models.Model):
     temporary_location_selection = fields.Selection(site_list,
                                                     string="Sites Selection", default="Haus Office Meruya")
 
-    # Nambah priority
     priority = fields.Selection(
         [('0', 'Not Important'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High'),], string='Priority', default='1')
 
-    # def notif_email(self):
-    #     template_data = {
-    #         'subject': 'Haus Issue Letter',
-    #         'body_html': f'<h1>Dear {self.employee_name}</h1> <h2> kamu mendapatkan masalah/issue berupa {self.issue_problem} dari {self.reporter_name} di cabang {self.temporary_location_selection} </h2>  <p> pada tanggal <b>{self.created_at}</b> dengan kategori {self.issue_category.name} dan prioritas {self.priority} dengan deadline <b>{self.issue_due_date}</b> dengan catatan {self.issue_comment} </p>',
-    #         'email_from': 'hrdummyhaus1@gmail.com',
-    #         'auto_delete': True,
-    #         # ini emailnya belum bisa sesuai ke yang ngirim
-    #         'email_to': 'jokopranowow99@gmail.com',
-
-    #     }
-    #     mail_id = self.env['mail.mail'].sudo().create(template_data)
-    #     mail_id.sudo().send()
+    def notif_email(self):
+        attachment = self.env['ir.attachment'].create({
+        'name': 'attachment.pdf',
+        'datas': self.issue_attachment,
+        'type': 'binary'})
+        template_data = {
+            'subject': 'Haus Issue Letter',
+            'body_html': f'<h1>Dear {self.employee_name}</h1> <h2> kamu mendapatkan masalah/issue berupa {self.issue_problem} dari {self.reporter_name} di cabang {self.temporary_location_selection} </h2>  <p> pada tanggal <b>{self.created_at}</b> dengan kategori {self.issue_category.name} dan prioritas {self.priority} dengan deadline <b>{self.issue_due_date}</b> dengan catatan {self.issue_comment} </p>',
+            'email_from': 'hrdummyhaus1@gmail.com',
+            'auto_delete': True,
+            'email_to': self.employee_email,
+            'attachment_ids': [(4, attachment.id)]
+        }
+        mail_id = self.env['mail.mail'].sudo().create(template_data)
+        mail_id.sudo().send()
