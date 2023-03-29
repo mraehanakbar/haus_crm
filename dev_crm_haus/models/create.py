@@ -22,7 +22,7 @@ class CrmIssueInhert(models.Model):
             'email_from': 'hrdummyhaus1@gmail.com',
             'auto_delete': True,
             # ini emailnya belum bisa sesuai ke yang ngirim
-            'email_to': self.env.user.email,
+            'email_to': self.employee_email,
             'attachment_ids': [(6, 0, [attachment.id])],
         }
         mail_id = self.env['mail.mail'].sudo().create(template_data)
