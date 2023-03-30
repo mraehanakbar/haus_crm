@@ -263,7 +263,8 @@ class CrmIssue(models.Model):
 
     issue_due_date = fields.Datetime(String="Due Date")
     issue_comment = fields.Text(String="Comment", required=True)
-    issue_attachment = fields.Binary("Attachment", attachment=True)
+    issue_attachment = fields.Binary(
+        "Attachment", attachment=True, required=True)
 
     employee_id = fields.Many2one(
         "employee.data", String="Employee", defaults=lambda self: self.env.user, required=True)
@@ -300,13 +301,17 @@ class CrmIssue(models.Model):
                                                     string="Sites Selection", default="Haus Office Meruya")
 
     priority = fields.Selection(
-        [('0', 'Not Important'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High'),], string='Priority', default='1')
+        [('0', 'Not Important'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High')], string='Priority', default='1')
 
+    state = fields.Selection(
+        [('not_solved', 'Not Solved'), ('solved', 'Solved')], string="State", default="not_solved", required=True)
+
+    # kirim email notifikasi ketika issue dibuat
     def notif_email(self):
         attachment = self.env['ir.attachment'].create({
-        'name': 'attachment.pdf',
-        'datas': self.issue_attachment,
-        'type': 'binary'})
+            'name': 'attachment.pdf',
+            'datas': self.issue_attachment,
+            'type': 'binary'})
         template_data = {
             'subject': 'Haus Issue Letter',
             'body_html': f'<h1>Dear {self.employee_name}</h1> <h2> kamu mendapatkan masalah/issue berupa {self.issue_problem} dari {self.reporter_name} di cabang {self.temporary_location_selection} </h2>  <p> pada tanggal <b>{self.created_at}</b> dengan kategori {self.issue_category.name} dan prioritas {self.priority} dengan deadline <b>{self.issue_due_date}</b> dengan catatan {self.issue_comment} </p>',
@@ -317,3 +322,11 @@ class CrmIssue(models.Model):
         }
         mail_id = self.env['mail.mail'].sudo().create(template_data)
         mail_id.sudo().send()
+
+    # fungsi untuk mengubah status issue menjadi solved
+    def solved_issue(self):
+        self.state = "solved"
+
+    # fungsi untuk mengubah status issue menjadi not solved
+    def unsolved_issue(self):
+        self.state = "not_solved"

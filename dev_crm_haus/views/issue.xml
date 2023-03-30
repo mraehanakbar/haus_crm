@@ -8,9 +8,12 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="issue_problem" string="Issues" />
+                <field name="reporter_name" string="Reporter" />
+                <field name="employee_name" string="Assigned To" />
                 <field name="issue_due_date" string="Tanggal"></field>
                 <field name="issue_category" string="Category" />
                 <field name="issue_comment" string="Comment" />
+                <field name="state" string="Status Issues" />
             </tree>
         </field>
     </record>
@@ -35,6 +38,10 @@
         <field name="model">crm.issue</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <field name="state" widget="statusbar" nolabel="1"
+                        options="{'clickable' : '1' }"></field>
+                </header>
                 <sheet>
                     <div class="mx-4">
                         <group>
@@ -63,10 +70,10 @@
                             <field name="issue_due_date" string="Due Date"></field>
                             <field name="issue_comment" string="Comment" />
                             <field name="issue_attachment" string="Attachment" />
-                            <!-- jika mau pakek tombol bisa di undo comment sama functionnya di
-                            model issue -->
-                            <!-- <button name="notif_email" type="object"
-                            action="notif_email">KIRIM</button> -->
+                            <button name="solved_issue" type="object"
+                                attrs="{'invisible': [('state','!=','not_solved')]}">Solved</button>
+                            <button name="unsolved_issue" type="object"
+                                attrs="{'invisible': [('state','!=','solved')]}">Unsolved</button>
                         </group>
                     </div>
                 </sheet>
