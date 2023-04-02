@@ -72,8 +72,6 @@
                             <field name="issue_attachment" string="Attachment" />
                             <button name="solved_issue" type="object"
                                 attrs="{'invisible': [('state','!=','not_solved')]}">Solved</button>
-                            <button name="unsolved_issue" type="object"
-                                attrs="{'invisible': [('state','!=','solved')]}">Unsolved</button>
                         </group>
                     </div>
                 </sheet>
