@@ -7,7 +7,7 @@
         <field name="model">crm.issue</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="issue_problem" string="Issues" />
+                <field name="issue_problem" string="Issues"/>
                 <field name="reporter_name" string="Reporter" />
                 <field name="employee_name" string="Assigned To" />
                 <field name="issue_due_date" string="Tanggal"></field>
