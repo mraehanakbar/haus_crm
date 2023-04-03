@@ -290,13 +290,23 @@ class CrmIssue(models.Model):
             return position
         except:
             return ''
+    def get_email(self):
+        try:
+            search_data = self.env['employee.data'].search(
+                [('email_employee', '=', self.env.user.login)])
+            position = search_data.mapped('employee_email')[0]
+            return position
+        except:
+            return ''
 
     # Tambahin nama user (first_name + last_name)
     reporter_name = fields.Char(
         String="Reporter Name", readonly=True, default=get_name_user)
     department_reporter = fields.Char(
-        String="Halo", readonly=True, default=get_department_user)
-
+        String="Reporter Department", readonly=True, default=get_department_user)
+    reporter_email = fields.Char(
+        String="Reporter Email", default=get_email)
+ 
     temporary_location_selection = fields.Selection(site_list,
                                                     string="Sites Selection", default="Haus Office Meruya")
 
