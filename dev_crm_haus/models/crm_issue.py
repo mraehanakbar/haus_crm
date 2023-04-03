@@ -1,6 +1,7 @@
 from email.policy import default
 from odoo import api, fields, models, _
 from datetime import datetime
+from odoo.exceptions import ValidationError
 
 
 site_list = [('HAUS! JKT - BINUS 1', 'HAUS! BINUS 1'),
@@ -273,6 +274,15 @@ class CrmIssue(models.Model):
     employee_name = fields.Char(related='employee_id.first_name_employee')
     employee_email = fields.Char(related='employee_id.email_employee')
 
+    # validator date tidak boleh kurang dari tanggal sekarang
+    @api.constrains('issue_due_date')
+    def _check_date(self):
+        for record in self:
+            if record.issue_due_date < datetime.now():
+                raise ValidationError(
+                    "Date cannot be less than the current date.")
+        return True
+
     def get_name_user(self):
         try:
             search_data = self.env['employee.data'].search(
@@ -290,12 +300,13 @@ class CrmIssue(models.Model):
             return position
         except:
             return ''
+
     def get_email(self):
         try:
             search_data = self.env['employee.data'].search(
                 [('email_employee', '=', self.env.user.login)])
-            position = search_data.mapped('employee_email')[0]
-            return position
+            email = search_data.mapped('email_employee')[0]
+            return email
         except:
             return ''
 
@@ -305,8 +316,8 @@ class CrmIssue(models.Model):
     department_reporter = fields.Char(
         String="Reporter Department", readonly=True, default=get_department_user)
     reporter_email = fields.Char(
-        String="Reporter Email", default=get_email)
- 
+        String="Reporter Email", readonly=True, default=get_email)
+
     temporary_location_selection = fields.Selection(site_list,
                                                     string="Sites Selection", default="Haus Office Meruya")
 
@@ -336,7 +347,32 @@ class CrmIssue(models.Model):
     # fungsi untuk mengubah status issue menjadi solved
     def solved_issue(self):
         self.state = "solved"
+        self.notif_solved_email()
 
-    # fungsi untuk mengubah status issue menjadi not solved
-    def unsolved_issue(self):
-        self.state = "not_solved"
+    # kirim email notifikasi ketika issue solved
+    def notif_solved_email(self):
+        template_data = {
+            'subject': 'Haus Solved Issue Letter',
+            'body_html': f'<h1>Dear {self.reporter_name}</h1> <h2> issue kamu dengan judul {self.issue_problem} telah selesai di {self.temporary_location_selection} </h2>  <p> pada tanggal <b>{self.created_at}</b> dengan kategori {self.issue_category.name} dan prioritas {self.priority} dengan deadline <b>{self.issue_due_date}</b> dengan catatan {self.issue_comment} </p>',
+            'email_from': 'hrdummyhaus1@gmail.com',
+            'auto_delete': True,
+            'email_to': self.reporter_email,
+        }
+        mail_id = self.env['mail.mail'].sudo().create(template_data)
+        mail_id.sudo().send()
+
+    # fungsi untuk mengirim email ketika deadline kurang 3 hari
+    @api.model
+    def send_deadline_email(self):
+        deadline_date = self.issue_due_date - timedelta(days=3)
+        records = self.search([('issue_due_date', '=', deadline_date)])
+        if records:
+            template_data = {
+                'subject': 'Haus Deadline Issue Letter',
+                'body_html': f'Deadline issue kamu dengan judul {self.issue_problem} akan berakhir dalam 3 hari di {self.temporary_location_selection}',
+                'email_from': 'hrdummyhaus1@gmail.com',
+                'auto_delete': True,
+                'email_to': self.employee_email,
+            }
+            mail_id = self.env['mail.mail'].sudo().create(template_data)
+            mail_id.sudo().send()

@@ -7,7 +7,7 @@
         <field name="model">crm.issue</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="issue_problem" string="Issues"/>
+                <field name="issue_problem" string="Issues" />
                 <field name="reporter_name" string="Reporter" />
                 <field name="employee_name" string="Assigned To" />
                 <field name="issue_due_date" string="Tanggal"></field>
@@ -56,6 +56,7 @@
                             <group>
                                 <field name="reporter_name" string="Reporter Name"></field>
                                 <field name="department_reporter" string="Department Reporter"></field>
+                                <field name="reporter_email" string="Reporter Email"></field>
                             </group>
                         </group>
                         <group>
@@ -71,7 +72,8 @@
                             <field name="issue_comment" string="Comment" />
                             <field name="issue_attachment" string="Attachment" />
                             <button name="solved_issue" type="object"
-                                attrs="{'invisible': [('state','!=','not_solved')]}">Solved</button>
+                                attrs="{'invisible': [('state','=','solved')]}">
+                                Solved</button>
                         </group>
                     </div>
                 </sheet>
