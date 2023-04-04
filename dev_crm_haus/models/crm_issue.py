@@ -376,3 +376,4 @@ class CrmIssue(models.Model):
             }
             mail_id = self.env['mail.mail'].sudo().create(template_data)
             mail_id.sudo().send()
+

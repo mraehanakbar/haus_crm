@@ -7,7 +7,7 @@
         <field name="model">crm.issue</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="issue_problem" string="Issues" />
+                <field name="issue_problem" string="Issues"/>
                 <field name="reporter_name" string="Reporter" />
                 <field name="employee_name" string="Assigned To" />
                 <field name="issue_due_date" string="Tanggal"></field>
@@ -56,10 +56,10 @@
                             <group>
                                 <field name="reporter_name" string="Reporter Name"></field>
                                 <field name="department_reporter" string="Department Reporter"></field>
-                                <field name="reporter_email" string="Reporter Email"></field>
                             </group>
                         </group>
-                        <group>
+                        <group
+                        >
                             <field name="priority" widget="priority" />
                             <field name="employee_id"
                                 options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"
@@ -72,8 +72,9 @@
                             <field name="issue_comment" string="Comment" />
                             <field name="issue_attachment" string="Attachment" />
                             <button name="solved_issue" type="object"
-                                attrs="{'invisible': [('state','=','solved')]}">
-                                Solved</button>
+                                attrs="{'invisible': [('state','!=','not_solved')]}">Solved</button>
+                            <button name="solved_issue" type="object"
+                                attrs="{'invisible': [('state','!=','solved')]}">Unsolved</button>
                         </group>
                     </div>
                 </sheet>

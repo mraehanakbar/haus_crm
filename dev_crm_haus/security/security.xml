@@ -3,7 +3,7 @@
     <record id="crm_record_rule" model="ir.rule">
         <field name="name">CRM Record Rule</field>
         <field name="model_id" ref="dev_crm_haus.model_crm_issue" />
-        <field name="domain_force">[('employee_email','=',user.login)]</field>
+        <field name="domain_force">['|', ('reporter_email','=',user.login), ('employee_email','=',user.login)]</field>
         <field name="global" eval="True" />
     </record>
 </odoo>
