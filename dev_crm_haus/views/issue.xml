@@ -41,6 +41,7 @@
                 <header>
                     <field name="state" widget="statusbar" nolabel="1"
                         options="{'clickable' : '1' }"></field>
+                    <field name="check_is_reporter_login" invisible='1'/>
                 </header>
                 <sheet>
                     <div class="mx-4">
@@ -72,9 +73,9 @@
                             <field name="issue_comment" string="Comment" />
                             <field name="issue_attachment" string="Attachment" />
                             <button name="solved_issue" type="object"
-                                attrs="{'invisible': [('state','=','solved'), ('state','=',True)]}">Solved</button>
+                                attrs="{'invisible': ['|', ('state','=','solved'), ('check_is_reporter_login', '=', True)]}">Solved</button>
                             <button name="not_solved_issue" type="object"
-                                attrs="{'invisible': [('state','=','not_solved'), ('state','=',True)]}">Not Solved</button>
+                                attrs="{'invisible': ['|', ('state','=','not_solved'), ('check_is_reporter_login', '=', True)]}">Not Solved</button>
                         </group>
                     </div>
                 </sheet>

@@ -325,7 +325,7 @@ class CrmIssue(models.Model):
         [('0', 'Not Important'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High')], string='Priority', default='1')
 
     state = fields.Selection(
-        [('not_solved', 'Not Solved'), ('solved', 'Solved')], string="State", required=True)
+        [('not_solved', 'Not Solved'), ('solved', 'Solved')], string="State")
 
     # kirim email notifikasi ketika issue dibuat
     def notif_email(self):
@@ -395,3 +395,13 @@ class CrmIssue(models.Model):
             mail_id = self.env['mail.mail'].sudo().create(template_data)
             mail_id.sudo().send()
 
+    check_is_reporter_login = fields.Boolean(
+    string="Reporter Login? ", default=True, compute='get_user_login_reporter')
+
+    @api.depends('check_is_reporter_login')
+    def get_user_login_reporter(self):
+        user_crnt = self._uid
+        if self.env.user.login == self.reporter_email:
+            self.check_is_reporter_login = True
+        else:
+            self.check_is_reporter_login = False
