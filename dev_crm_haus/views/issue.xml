@@ -72,11 +72,9 @@
                             <field name="issue_comment" string="Comment" />
                             <field name="issue_attachment" string="Attachment" />
                             <button name="solved_issue" type="object"
-                                attrs="{'invisible': [('state','!=','not_solved')]}">Solved</button>
-                            <button name="solved_issue" type="object"
-                                attrs="{'invisible': [('state','!=','solved')]}">Unsolved</button>
+                                attrs="{'invisible': [('state','=','solved'), ('state','=',True)]}">Solved</button>
                             <button name="not_solved_issue" type="object"
-                                attrs="{'invisible': [('state','!=','not_solved')]}">Not Solved</button>
+                                attrs="{'invisible': [('state','=','not_solved'), ('state','=',True)]}">Not Solved</button>
                         </group>
                     </div>
                 </sheet>

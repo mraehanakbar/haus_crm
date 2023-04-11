@@ -325,7 +325,7 @@ class CrmIssue(models.Model):
         [('0', 'Not Important'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High')], string='Priority', default='1')
 
     state = fields.Selection(
-        [('not_solved', 'Not Solved'), ('solved', 'Solved')], string="State", default="not_solved", required=True)
+        [('not_solved', 'Not Solved'), ('solved', 'Solved')], string="State", required=True)
 
     # kirim email notifikasi ketika issue dibuat
     def notif_email(self):
