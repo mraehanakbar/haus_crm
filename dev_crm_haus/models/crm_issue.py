@@ -361,6 +361,24 @@ class CrmIssue(models.Model):
         mail_id = self.env['mail.mail'].sudo().create(template_data)
         mail_id.sudo().send()
 
+#not solved 
+    # fungsi untuk mengubah status issue menjadi not solved
+    def not_solved_issue(self):
+        self.state = "not_solved"
+        self.notif_not_solved_email()
+
+    # kirim email notifikasi ketika issue solved
+    def notif_not_solved_email(self):
+        template_data = {
+            'subject': 'Haus Not Solved Issue Letter',
+            'body_html': f'<h1>Dear {self.reporter_name}</h1> <h2> issue kamu dengan judul {self.issue_problem} belum selesai di {self.temporary_location_selection} </h2>  <p> pada tanggal <b>{self.created_at}</b> dengan kategori {self.issue_category.name} dan prioritas {self.priority} dengan deadline <b>{self.issue_due_date}</b> dengan catatan {self.issue_comment} </p>',
+            'email_from': 'hrdummyhaus1@gmail.com',
+            'auto_delete': True,
+            'email_to': self.reporter_email,
+        }
+        mail_id = self.env['mail.mail'].sudo().create(template_data)
+        mail_id.sudo().send()
+        
     # fungsi untuk mengirim email ketika deadline kurang 3 hari
     @api.model
     def send_deadline_email(self):

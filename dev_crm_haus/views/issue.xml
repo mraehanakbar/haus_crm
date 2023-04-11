@@ -75,6 +75,8 @@
                                 attrs="{'invisible': [('state','!=','not_solved')]}">Solved</button>
                             <button name="solved_issue" type="object"
                                 attrs="{'invisible': [('state','!=','solved')]}">Unsolved</button>
+                            <button name="not_solved_issue" type="object"
+                                attrs="{'invisible': [('state','!=','not_solved')]}">Not Solved</button>
                         </group>
                     </div>
                 </sheet>
