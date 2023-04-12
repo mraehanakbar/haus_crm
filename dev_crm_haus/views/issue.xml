@@ -7,7 +7,7 @@
         <field name="model">crm.issue</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="issue_problem" string="Issues" />
+                <field name="issue_problem" string="Issues"/>
                 <field name="reporter_name" string="Reporter" />
                 <field name="employee_name" string="Assigned To" />
                 <field name="issue_due_date" string="Tanggal"></field>
@@ -41,6 +41,7 @@
                 <header>
                     <field name="state" widget="statusbar" nolabel="1"
                         options="{'clickable' : '1' }"></field>
+                    <field name="check_is_reporter_login" invisible='1'/>
                 </header>
                 <sheet>
                     <div class="mx-4">
@@ -58,7 +59,8 @@
                                 <field name="department_reporter" string="Department Reporter"></field>
                             </group>
                         </group>
-                        <group>
+                        <group
+                        >
                             <field name="priority" widget="priority" />
                             <field name="employee_id"
                                 options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"
@@ -71,9 +73,9 @@
                             <field name="issue_comment" string="Comment" />
                             <field name="issue_attachment" string="Attachment" />
                             <button name="solved_issue" type="object"
-                                attrs="{'invisible': [('state','!=','not_solved')]}">Solved</button>
-                            <button name="unsolved_issue" type="object"
-                                attrs="{'invisible': [('state','!=','solved')]}">Unsolved</button>
+                                attrs="{'invisible': ['|', ('state','=','solved'), ('check_is_reporter_login', '=', True)]}">Solved</button>
+                            <button name="not_solved_issue" type="object"
+                                attrs="{'invisible': ['|', ('state','=','not_solved'), ('check_is_reporter_login', '=', True)]}">Not Solved</button>
                         </group>
                     </div>
                 </sheet>
