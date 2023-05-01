@@ -1,5 +1,7 @@
 from email.policy import default
-from odoo import api, fields, models, _
+import requests
+from requests import get
+from odoo import api, fields, models, http, _
 from datetime import datetime
 from odoo.exceptions import ValidationError
 
@@ -405,3 +407,20 @@ class CrmIssue(models.Model):
             self.check_is_reporter_login = True
         else:
             self.check_is_reporter_login = False
+
+    #GEO User Location
+    user_location = fields.Char(String='Location',default=lambda self: self.get_user_location(), readonly=True)
+    
+    def get_user_location(self):
+        # Get the user's public IP address from the request headers
+        IPAddr= get('https://api.ipify.org').content.decode('utf8')
+        # Make an HTTP request to the ipstack API to retrieve the user's location
+        url = f'https://ipapi.co/{IPAddr}/json/'
+        response = requests.get(url)
+        # Extract the city, region, and country information from the JSON response
+        data = response.json()
+        city = data.get('city')
+        region = data.get('region')
+        country = data.get('country_name')
+        # Format the location data into a string and return it as the default value for the user_location field
+        return f'{city}, {region}, {country}'

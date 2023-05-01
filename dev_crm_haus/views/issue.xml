@@ -62,6 +62,7 @@
                         <group
                         >
                             <field name="priority" widget="priority" />
+                            <field name="user_location" string="Location"></field>
                             <field name="employee_id"
                                 options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"
                                 string="Employee"></field>
