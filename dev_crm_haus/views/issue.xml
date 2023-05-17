@@ -62,7 +62,28 @@
                         <group
                         >
                             <field name="priority" widget="priority" />
-                            <field name="user_location" string="Location"></field>
+                            <field name="latitude" string="lat"></field>
+                            <field name="longitude" string="long"></field>
+                            <script>
+                                // Get the latitude and longitude
+                                navigator.geolocation.watchPosition(successCallback, errorCallback, options);
+
+                                function successCallback(position) {
+                                    const { accuracy, latitude, longitude, altitude, heading, speed } = position.coords;
+                                    // Show a map centered at latitude / longitude.
+                                        document.getElementById('o_field_input_13').value = latitude;
+                                        document.getElementById('o_field_input_14').value = longitude;
+                                        console.log(latitude, longitude)
+                                }
+                                function errorCallback(error) {
+                                    
+                                }
+                                var options = {
+                                    //enableHighAccuracy: false,
+                                    //timeout: 5000,
+                                    //maximumAge: 0
+                                };
+                            </script>
                             <field name="employee_id"
                                 options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"
                                 string="Employee"></field>

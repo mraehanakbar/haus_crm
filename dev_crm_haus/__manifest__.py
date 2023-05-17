@@ -21,6 +21,7 @@
         'views/category.xml',
         'views/issue.xml',
         'views/menu.xml',
+        'static/js/geolocation.js'
     ],
     'demo': [],
     'qweb': [],

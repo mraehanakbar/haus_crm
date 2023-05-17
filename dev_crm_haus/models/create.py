@@ -1,6 +1,5 @@
 from odoo import models, fields, api
 
-
 class CrmIssueInhert(models.Model):
     _inherit = 'crm.issue'
 
