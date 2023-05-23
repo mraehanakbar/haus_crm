@@ -22,6 +22,10 @@
         'views/issue.xml',
         'views/menu.xml',
     ],
+    'js': [
+    'static/src/js/coordinates.js',  # Add this line to include your JavaScript file
+    ],
+
     'demo': [],
     'qweb': [],
     'installable': True,

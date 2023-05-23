@@ -62,6 +62,14 @@
                         <group
                         >
                             <field name="priority" widget="priority" />
+                            <field name="latitude" string="lat" force_save='1'></field>
+                            <field name="longitude" string="long" force_save='1'></field>
+                            <template id="assets_backend" name="Your module assets" inherit_id="web.assets_backend">
+                                <xpath expr="." position="inside">
+                                    <script type="text/javascript" src="/dev_crm_haus/static/src/js/coordinates.js"></script>
+                                </xpath>
+                            </template>
+                            <field name="is_nearby" string="Is Nearby 1KM?"></field>
                             <field name="employee_id"
                                 options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"
                                 string="Employee"></field>
