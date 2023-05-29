@@ -17,8 +17,10 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        'security/security.xml',
         'views/category.xml',
+        'views/questionare_admin.xml',
+        'views/questionare_user.xml',
+        'wizard/views/download_questionare.xml',
         'views/issue.xml',
         'views/menu.xml',
     ],

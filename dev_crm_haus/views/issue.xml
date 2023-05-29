@@ -7,13 +7,9 @@
         <field name="model">crm.issue</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="issue_problem" string="Issues"/>
-                <field name="reporter_name" string="Reporter" />
-                <field name="employee_name" string="Assigned To" />
-                <field name="issue_due_date" string="Tanggal"></field>
+                <field name="issue_problem" string="Issues" />
                 <field name="issue_category" string="Category" />
                 <field name="issue_comment" string="Comment" />
-                <field name="state" string="Status Issues" />
             </tree>
         </field>
     </record>
@@ -38,12 +34,26 @@
         <field name="model">crm.issue</field>
         <field name="arch" type="xml">
             <form>
-                <header>
-                    <field name="state" widget="statusbar" nolabel="1"
-                        options="{'clickable' : '1' }"></field>
-                    <field name="check_is_reporter_login" invisible='1'/>
-                </header>
                 <sheet>
+<<<<<<< HEAD
+                    <group>
+                        <field name="reporter_name" string="Reporter Name"></field>
+                        <field name="department_reporter" string = "Department Reporter"></field>                        
+                    </group>
+                    <sheet>
+                    <group>
+                        <field name="employee_id" string="Employee"></field>
+                        <field name="department" string="Departement"></field>
+                        <field name="temporary_location_selection" ></field>
+                        <field name="issue_problem" string="Issues" />
+                        <field name="issue_category" string="Category" />
+                        <field name="issue_comment" string="Comment" />
+                    </group>
+                    </sheet>
+                    <group>
+                        <field name="issue_attachment" string="Attachment" />
+                    </group>
+=======
                     <div class="mx-4">
                         <group>
                             <group>
@@ -86,6 +96,7 @@
                                 attrs="{'invisible': ['|', ('state','=','not_solved'), ('check_is_reporter_login', '=', True)]}">Not Solved</button>
                         </group>
                     </div>
+>>>>>>> d7dced256c9c02961badd70b365d3892fbb7381c
                 </sheet>
             </form>
         </field>

@@ -23,4 +23,28 @@
         sequence="2"
     />
 
+    <menuitem
+        id="crm_questionare_master"
+        name="Questionare"
+        parent="crm_root"
+        action="action_questionare_admin"
+        sequence="3"
+    />
+
+    <menuitem
+        id="crm_questionare_master_user"
+        name="Questionare User"
+        parent="crm_root"
+        action="action_questionare_user"
+        sequence="4"
+    />
+
+    <menuitem
+        id="crm_questionare_master_download"
+        name="Questionare Download"
+        parent="crm_root"
+        action="action_download_questionare"
+        sequence="5"
+    />
+
 </odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="download_quistioner_form" model="ir.ui.view">
+        <field name="name">download.questionare.form</field>
+        <field name="model">download.questionare</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="temporary_location_selection_fields"/>
+                    <field name="downloaded_date"/>
+                </group>
+                <footer>
+                    <button id="confirm_button" name="download_the_questionare"  string="Download" type="object" 
+                        class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_download_questionare" model="ir.actions.act_window">
+        <field name="name">Download Form Questionare</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">download.questionare</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
