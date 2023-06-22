@@ -7,7 +7,7 @@ from datetime import datetime
 from odoo.exceptions import ValidationError
 
 site_list = {
-    'name':[
+    'name': [
         ('HAUS! JKT - BINUS 1', 'HAUS! BINUS 1'),
         ('HAUS! DPK - GUNADARMA', 'HAUS! DEPOK'),
         ('HAUS! TNG - KARANG TENGAH', 'HAUS! KARANG TENGAH'),
@@ -190,19 +190,19 @@ site_list = {
         ('HAUS! TNG - BERINGIN RAYA', 'HAUS! TNG - BERINGIN RAYA'),
         ('HAUS! BGR - CIOMAS', 'HAUS! BGR - CIOMAS'),
         ('HAUS TNG - VILLA TANGERANG INDAH',
-        'HAUS TNG - VILLA TANGERANG INDAH'),
+         'HAUS TNG - VILLA TANGERANG INDAH'),
         ('HAUS! TNG - TALAGA BASTARI', 'HAUS! TNG - TALAGA BASTARI'),
         ('HAUS! JKT - SUMUR BOR', 'HAUS! JKT - SUMUR BOR'),
         ('HAUS! TNG - BUKIT SERUA INDAH', 'HAUS! TNG - BUKIT SERUA INDAH'),
         ('HAUS! TNG - CURUG', 'HAUS! TNG - CURUG'),
         ('HAUS! BGR - CITRA INDAH CITY', 'HAUS! BGR - CITRA INDAH CITY'),
         ('HAUS! DPK - MEKARSARI CIMANGGIS',
-        'HAUS! DPK - MEKARSARI CIMANGGIS'),
+         'HAUS! DPK - MEKARSARI CIMANGGIS'),
         ('HAUS! BGR - CIAPUS', 'HAUS! BGR - CIAPUS'),
         ('HAUS! DPK - PENGASINAN SAWANGAN',
-        'HAUS! DPK - PENGASINAN SAWANGAN'),
+         'HAUS! DPK - PENGASINAN SAWANGAN'),
         ('HAUS! TNG - VILLA DAGO PAMULANG',
-        'HAUS! TNG - VILLA DAGO PAMULANG'),
+         'HAUS! TNG - VILLA DAGO PAMULANG'),
         ('HAUS! TNG - HASYIM ASHARI', 'HAUS! TNG - HASYIM ASHARI'),
         ('HAUS! BGR - DURIAN RAYA', 'HAUS! BGR - DURIAN RAYA'),
         ('HAUS! DPK - JATIMULYA CILODONG', 'HAUS! DPK - JATIMULYA CILODONG'),
@@ -230,12 +230,12 @@ site_list = {
         ('HAUS! JKT - CITRA GARDEN 7', 'HAUS! JKT - CITRA GARDEN 7'),
         ('HAUS! BDG - CIUMBULEUIT', 'HAUS! BDG - CIUMBULEUIT'),
         ('HAUS! CKR - TARUM BARAT CIKARANG',
-        'HAUS! CKR - TARUM BARAT CIKARANG'),
+         'HAUS! CKR - TARUM BARAT CIKARANG'),
         ('HAUS! BKS - MUTIARA GADING', 'HAUS! BKS - MUTIARA GADING'),
         ('HAUS! BKS - SUMBER ARTHA BINTARA',
-        'HAUS! BKS - SUMBER ARTHA BINTARA'),
+         'HAUS! BKS - SUMBER ARTHA BINTARA'),
         ('HAUS! JKT - TAMAN KOTA KEMBANGAN',
-        'HAUS! JKT - TAMAN KOTA KEMBANGAN'),
+         'HAUS! JKT - TAMAN KOTA KEMBANGAN'),
         ('HAUS! BKS - MUCHTAR TABRANI', 'HAUS! BKS - MUCHTAR TABRANI'),
         ('HAUS! SBG - OTISTA', 'HAUS! SBG - OTISTA'),
         ('HAUS! JKT - STASIUN GAMBIR', 'HAUS! JKT - STASIUN GAMBIR'),
@@ -247,64 +247,71 @@ site_list = {
         ('HAUS! BDG - RANCAEKEK', 'HAUS! BDG - RANCAEKEK'),
         ('HAUS! BKS - GRAND WISATA', 'HAUS! BKS - GRAND WISATA'),
         ('HAUS! BKS - KEMANG RAYA JATICEMPAKA',
-        'HAUS! BKS - KEMANG RAYA JATICEMPAKA'),
+         'HAUS! BKS - KEMANG RAYA JATICEMPAKA'),
         ('HAUS! BKS - PLASA CIBUBUR', 'HAUS! BKS - PLASA CIBUBUR'),
         ('Haus Office Meruya', 'Haus Office Meruya'),
         ('Haus Office Sastra Graha', 'Haus Office Sastra Graha'),
     ],
-    'location':[
-    (-6.2007562,106.7825184),
-    (-6.3548109,106.8314291),
-    (-6.2213356,106.7010479),
-    (-6.8633967,107.5867264),
-    (-6.9121355,107.6998974),
-    (-6.1693577,106.7889386),
-    (-6.2624373,106.7286241),
-    (-6.2336871,106.7466062),
-    (-6.9236617,107.559724),
-    (-6.1233645,106.7151742),
-    (-6.1534001,106.4278513),
-    (-6.2049496,106.9326346),
-    (-6.1626537,106.8631665),
-    (-6.345643,106.8625284),
-    (-7.0645883,110.4428938),
-    (-6.3943489,106.9349595),
-    (-6.35338,106.7151316),
-    (-6.1710319,106.6770079),
-    (-6.3086683,106.7532975),
-    #Dummy Value
-    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
-    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
-    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
-    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
-    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
-    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
-    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
-    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
-   ]
+    'location': [
+        (-6.2007562, 106.7825184),
+        (-6.3548109, 106.8314291),
+        (-6.2213356, 106.7010479),
+        (-6.8633967, 107.5867264),
+        (-6.9121355, 107.6998974),
+        (-6.1693577, 106.7889386),
+        (-6.2624373, 106.7286241),
+        (-6.2336871, 106.7466062),
+        (-6.9236617, 107.559724),
+        (-6.1233645, 106.7151742),
+        (-6.1534001, 106.4278513),
+        (-6.2049496, 106.9326346),
+        (-6.1626537, 106.8631665),
+        (-6.345643, 106.8625284),
+        (-7.0645883, 110.4428938),
+        (-6.3943489, 106.9349595),
+        (-6.35338, 106.7151316),
+        (-6.1710319, 106.6770079),
+        (-6.3086683, 106.7532975),
+        # Dummy Value
+        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
+                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
+        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
+                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
+        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
+                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
+        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
+                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
+        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
+                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
+        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
+                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
+        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
+                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
+        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
+                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
+    ]
 }
 
 
 class download_questionare(models.TransientModel):
     _name = "download.questionare"
-    _inherit = ["mail.thread","mail.activity.mixin"]
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "download questionare"
 
     temporary_location_selection_fields = fields.Selection(site_list['name'],
-                                                    string="Sites Selection", default="Haus Office Meruya")
-    
-    downloaded_date = fields.Date(string='Start Date',default = datetime.today(), readonly = True)
+                                                           string="Sites Selection", default="Haus Office Meruya")
 
+    downloaded_date = fields.Date(
+        string='Start Date', default=datetime.today(), readonly=True)
 
     latitude = fields.Float(string='Latitude')
     longitude = fields.Float(string='Longitude')
     is_nearby = fields.Boolean('Is nearby?', default=False)
 
-
     def my_filtering_function_quiz(pair):
         key, value = pair
         if value[2]['content_id'] == self.course_title:
-            return True 
+            return True
         else:
             return False
 
@@ -315,45 +322,55 @@ class download_questionare(models.TransientModel):
         dict_data = {}
 
         for i in range(len(full_data.mapped('questionare_name_fields'))):
-            current_data = full_data.mapped('temporary_location_selection_fields')[i]
-            
+            current_data = full_data.mapped(
+                'temporary_location_selection_fields')[i]
+
             if current_data == self.temporary_location_selection_fields:
                 search_data_2_count = self.env['crm.questionare.user'].search_count([('questionare_name_fields', '=', full_data.mapped('questionare_name_fields')[i]),
-                ('temporary_location_selection_fields', '=', full_data.mapped('temporary_location_selection_fields')[i]),('temporary_location_selection_fields', '=', full_data.mapped('temporary_location_selection_fields')[i]),
-                ('email_employee', '=', self.env.user.login)])
-
+                                                                                     ('temporary_location_selection_fields', '=', full_data.mapped('temporary_location_selection_fields')[
+                                                                                      i]), ('temporary_location_selection_fields', '=', full_data.mapped('temporary_location_selection_fields')[i]),
+                                                                                     ('email_employee', '=', self.env.user.login)])
 
                 search_data_2 = self.env['crm.questionare.user'].search([('questionare_name_fields', '=', full_data.mapped('questionare_name_fields')[i]),
-                ('temporary_location_selection_fields', '=', full_data.mapped('temporary_location_selection_fields')[i]),('temporary_location_selection_fields', '=', full_data.mapped('temporary_location_selection_fields')[i]),
-                ('email_employee', '=', self.env.user.login)])
+                                                                         ('temporary_location_selection_fields', '=', full_data.mapped('temporary_location_selection_fields')[
+                                                                          i]), ('temporary_location_selection_fields', '=', full_data.mapped('temporary_location_selection_fields')[i]),
+                                                                         ('email_employee', '=', self.env.user.login)])
 
                 if search_data_2_count == 0:
                     self.env['crm.questionare.user'].sudo().create({
                         'questionare_name_fields': full_data.mapped('questionare_name_fields')[i],
-                        'temporary_location_selection_fields':full_data.mapped('temporary_location_selection_fields')[i],
-                        'date_of_downloaded':self.downloaded_date
-                        })
+                        'temporary_location_selection_fields': full_data.mapped('temporary_location_selection_fields')[i],
+                        'date_of_downloaded': self.downloaded_date
+                    })
+
+                    # Make record in model log
+                    self.env['crm.log'].sudo().create({
+                        'name': self.env.user.name,
+                        'location': self.temporary_location_selection_fields,
+                    })
 
                     def my_filtering_function_content(pair):
                         key, value = pair
                         if value[2]['questionare_name'] == full_data.mapped('questionare_name_fields')[i]:
-                            return True 
+                            return True
                         else:
                             return False
 
                     for x in range(len(search_questions.mapped('question_audit_fields'))):
-                        dict_data[search_questions.mapped('question_audit_fields')[x]]=(0,0,{
-                            'questionare_id':int(search_data_2),
-                            'questionare_name':str(search_questions.mapped('questionare_name')[x]),
-                            'question_audit_fields':str(search_questions.mapped('question_audit_fields')[x]),
+                        dict_data[search_questions.mapped('question_audit_fields')[x]] = (0, 0, {
+                            'questionare_id': int(search_data_2),
+                            'questionare_name': str(search_questions.mapped('questionare_name')[x]),
+                            'question_audit_fields': str(search_questions.mapped('question_audit_fields')[x]),
                         })
-                    
-                    filtered_grades = dict(filter(my_filtering_function_content, dict_data.items()))
+
+                    filtered_grades = dict(
+                        filter(my_filtering_function_content, dict_data.items()))
                     print(filtered_grades)
-                    search_data_3 = self.env['crm.questionare.user'].search([('questionare_name_fields', '=', full_data.mapped('questionare_name_fields')[i])])
+                    search_data_3 = self.env['crm.questionare.user'].search(
+                        [('questionare_name_fields', '=', full_data.mapped('questionare_name_fields')[i])])
                     search_data_3.sudo().write({
-                        'list_questions_fields' : list(filtered_grades.values())
-                        })
-                
+                        'list_questions_fields': list(filtered_grades.values())
+                    })
+
                 elif search_data_2_count > 0:
                     pass

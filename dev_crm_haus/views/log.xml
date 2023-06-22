@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+  <record id="action_log_register" model="ir.actions.act_window">
+    <field name="name">Create New Log</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">crm.log</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{}</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+        Create new Log
+      </p>
+    </field>
+  </record>
+
+
+  <record id="view_log_form" model="ir.ui.view">
+    <field name="name">crm.log.form</field>
+    <field name="model">crm.log</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name" string="Name" />
+            <field name="log_date" string="Date" />
+            <field name="location" strin="Location" />
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_log_tree" model="ir.ui.view">
+    <field name="name">crm.log.tree</field>
+    <field name="model">crm.log</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name" string="Name" />
+        <field name="log_date" string="Date" />
+        <field name="location" string="Location" />
+      </tree>
+    </field>
+  </record>
+
+</odoo>

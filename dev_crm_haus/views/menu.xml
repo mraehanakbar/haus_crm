@@ -46,5 +46,12 @@
         action="action_download_questionare"
         sequence="5"
     />
+    <menuitem
+        id="crm_log_master"
+        name="Log Downloaded User"
+        parent="crm_root"
+        action="action_log_register"
+        sequence="6"
+    />
 
 </odoo>

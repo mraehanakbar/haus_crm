@@ -35,68 +35,23 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-<<<<<<< HEAD
                     <group>
                         <field name="reporter_name" string="Reporter Name"></field>
-                        <field name="department_reporter" string = "Department Reporter"></field>                        
+                        <field name="department_reporter" string="Department Reporter"></field>
                     </group>
                     <sheet>
-                    <group>
-                        <field name="employee_id" string="Employee"></field>
-                        <field name="department" string="Departement"></field>
-                        <field name="temporary_location_selection" ></field>
-                        <field name="issue_problem" string="Issues" />
-                        <field name="issue_category" string="Category" />
-                        <field name="issue_comment" string="Comment" />
-                    </group>
-                    </sheet>
-                    <group>
-                        <field name="issue_attachment" string="Attachment" />
-                    </group>
-=======
-                    <div class="mx-4">
                         <group>
-                            <group>
-                                <div>
-                                    <h1>Laporan Pembuatan Issue</h1>
-                                    <h6>
-                                        <field name="created_at"></field>
-                                    </h6>
-                                </div>
-                            </group>
-                            <group>
-                                <field name="reporter_name" string="Reporter Name"></field>
-                                <field name="department_reporter" string="Department Reporter"></field>
-                            </group>
-                        </group>
-                        <group
-                        >
-                            <field name="priority" widget="priority" />
-                            <field name="latitude" string="lat" force_save='1'></field>
-                            <field name="longitude" string="long" force_save='1'></field>
-                            <template id="assets_backend" name="Your module assets" inherit_id="web.assets_backend">
-                                <xpath expr="." position="inside">
-                                    <script type="text/javascript" src="/dev_crm_haus/static/src/js/coordinates.js"></script>
-                                </xpath>
-                            </template>
-                            <field name="is_nearby" string="Is Nearby 1KM?"></field>
-                            <field name="employee_id"
-                                options="{'no_quick_create':True,'no_create_edit':True,'no_open': True,}"
-                                string="Employee"></field>
+                            <field name="employee_id" string="Employee"></field>
                             <field name="department" string="Departement"></field>
                             <field name="temporary_location_selection"></field>
                             <field name="issue_problem" string="Issues" />
                             <field name="issue_category" string="Category" />
-                            <field name="issue_due_date" string="Due Date"></field>
                             <field name="issue_comment" string="Comment" />
-                            <field name="issue_attachment" string="Attachment" />
-                            <button name="solved_issue" type="object"
-                                attrs="{'invisible': ['|', ('state','=','solved'), ('check_is_reporter_login', '=', True)]}">Solved</button>
-                            <button name="not_solved_issue" type="object"
-                                attrs="{'invisible': ['|', ('state','=','not_solved'), ('check_is_reporter_login', '=', True)]}">Not Solved</button>
                         </group>
-                    </div>
->>>>>>> d7dced256c9c02961badd70b365d3892fbb7381c
+                    </sheet>
+                    <group>
+                        <field name="issue_attachment" string="Attachment" />
+                    </group>
                 </sheet>
             </form>
         </field>
