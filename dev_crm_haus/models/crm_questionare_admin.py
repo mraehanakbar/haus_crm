@@ -251,4 +251,10 @@ class CrmQuestionareAdmin(models.Model):
     string="Sites Selection",default="Haus Office Meruya")
     
     list_questions_fields = fields.One2many('crm.questions.admin','questionare_id')
- 
+    
+    list_log = fields.One2many('crm.log', 'log_id', compute="_compute_list_log", readonly=True)
+
+    def _compute_list_log(self):
+        log_model = self.env['crm.log']
+        log_records = log_model.search([('location', '=', self.temporary_location_selection_fields)])
+        self.list_log = log_records

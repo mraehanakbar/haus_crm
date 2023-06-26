@@ -7,8 +7,8 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <group>
-                        <group>
+                    <group class="row">
+                        <group class="col">
                             <field name="questionare_name_fields" string="Questionare Name"/>
                             <field name="list_questions_fields">
                                 <tree string="List Of Question">
@@ -16,8 +16,14 @@
                                 </tree>
                             </field>
                         </group>
-                        <group>
+                        <group class="col">
                             <field name="temporary_location_selection_fields" string = "Priority"/>
+                            <field name="list_log">
+                                <tree string="Log Of Downloaded User">
+                                    <field name="name"/>
+                                    <field name="log_date"/>
+                                </tree>
+                            </field>
                         </group>
                     </group>
                 </sheet>
