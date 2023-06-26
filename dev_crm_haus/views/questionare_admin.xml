@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
     <record id="view_questionare_admin_form" model="ir.ui.view">
         <field name="name">crm.questionare.admin.form</field>
         <field name="model">crm.questionare.admin</field>
@@ -18,8 +17,8 @@
                         </group>
                         <group class="col">
                             <field name="temporary_location_selection_fields" string = "Priority"/>
-                            <field name="list_log">
-                                <tree string="Log Of Downloaded User">
+                            <field name="list_log" string="Log of Downloaded User">
+                                <tree>
                                     <field name="name"/>
                                     <field name="log_date"/>
                                 </tree>
