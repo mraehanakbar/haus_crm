@@ -51,6 +51,8 @@
                     </sheet>
                     <group>
                         <field name="issue_attachment" string="Attachment" />
+                        <button name="fitur_email" string="Send email" type="object"
+                            class="oe_highlight" />
                     </group>
                 </sheet>
             </form>

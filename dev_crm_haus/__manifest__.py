@@ -28,7 +28,11 @@
     'js': [
         'static/src/js/coordinates.js',  # Add this line to include your JavaScript file
     ],
-
+    'assets': {
+        'web.assets_backend': [
+            'dev_crm_haus/static/**/*',
+        ],
+    },
     'demo': [],
     'qweb': [],
     'installable': True,

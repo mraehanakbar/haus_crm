@@ -1,0 +1,71 @@
+<odoo>
+  <data>
+    <record id="email_template_card" model="mail.template">
+      <field name="name">Card Email Template</field>
+      <field name="subject">Card Template Email</field>
+      <field name="model_id" ref="model_your_model" />
+      <field name="auto_delete" eval="True" />
+      <field name="email_from">${object.env.user.email}</field>
+      <field name="email_to">${object.email}</field>
+      <field name="lang">${object.env.user.lang}</field>
+      <field name="body_html">
+        <![CDATA[
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>Card Example</title>
+              <style>
+                .card {
+                  width: 500px;
+                  border: 1px solid #ccc;
+                  border-radius: 4px;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+
+                .card img {
+                  width: 50px;
+                  height: auto;
+                  margin-right: 20px;
+                }
+
+                .card-head {
+                  padding: 10px;
+                  border-bottom: 1px solid #000000;
+                  justify-content: space-between;
+                  display: flex;
+                }
+
+                .card-content {
+                  padding: 10px;
+                }
+
+                .card-title {
+                  font-size: 18px;
+                  font-weight: bold;
+                  margin: 0;
+                }
+
+                .card-description {
+                  font-size: 14px;
+                  color: #555;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="card">
+                <div class="card-head">
+                  <img src="haus.png" alt="Card Image">
+                  <p>PT. Inspirasi Bisnis Nusantara</p>
+                </div>
+                <div class="card-content">
+                  <h3 class="card-title">Card Title</h3>
+                  <p class="card-description">This is the description of the card.</p>
+                </div>
+              </div>
+            </body>
+          </html>
+        ]]>
+      </field>
+    </record>
+  </data>
+</odoo>
