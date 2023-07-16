@@ -372,5 +372,33 @@ class download_questionare(models.TransientModel):
                         'list_questions_fields': list(filtered_grades.values())
                     })
 
+                    # self.env['mail.message'].create({
+                    #     'message_type': 'notification',
+                    #     'subtype_id': self.env.ref('mail.mt_comment').id,
+                    #     'body': message,
+                    #     'subject': 'Quisioner berhasil di download',
+                    #     'partner_ids': [(4, self.env.user.partner_id.id)],
+                    #     'model': self._name,
+                    #     'res_id': self.id,
+                    # })
+
+                    message = 'Quisioner pada lokasi ' + \
+                        self.temporary_location_selection_fields + ' berhasil di download'
+                    action = self.env.ref(
+                        'dev_crm_haus.action_questionare_user')
+
+                    return {
+                        'type': 'ir.actions.client',
+                        'tag': 'display_notification',
+                        'params': {
+                            'title': 'Download Quisioner Berhasil',
+                            'message': message,
+                            'type': 'success',
+                            'url': f'  # action
+                            'timer': 3,
+                            'sticky': True,
+                        }
+                    }
+
                 elif search_data_2_count > 0:
                     pass
