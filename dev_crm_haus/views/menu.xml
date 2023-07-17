@@ -11,8 +11,24 @@
         id="crm_issues_master"
         name="Issues"
         parent="crm_root"
-        action="action_issue_register"
+        action="action_your_request_list"
         sequence="1"
+    />
+
+    <menuitem
+        id="crm_issues_requested_list"
+        name="Requested Issue"
+        parent="crm_issues_master"
+        action="action_requested_list"
+        sequence="1"
+    />
+
+    <menuitem
+        id="crm_issues_your_request_list"
+        name="Your Requested Issue"
+        parent="crm_issues_master"
+        action="action_your_request_list"
+        sequence="2"
     />
 
     <menuitem
@@ -25,17 +41,18 @@
 
     <menuitem
         id="crm_questionare_master"
-        name="Questionare"
+        name="Questionare Admin"
         parent="crm_root"
         action="action_questionare_admin"
+        groups="dev_crm_haus.group_crm_questioner_admin"
         sequence="3"
     />
 
     <menuitem
         id="crm_questionare_master_user"
-        name="Questionare User"
+        name="Questionare"
         parent="crm_root"
-        action="action_questionare_user"
+        action="action_list_user_questioner"
         sequence="4"
     />
 
@@ -51,6 +68,7 @@
         name="Log Downloaded User"
         parent="crm_root"
         action="action_log_register"
+        groups="dev_crm_haus.group_crm_questioner_admin"
         sequence="6"
     />
 

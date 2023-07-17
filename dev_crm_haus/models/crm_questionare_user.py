@@ -251,6 +251,7 @@ class CrmQuestionareUser(models.Model):
  
     user_fields = fields.Many2one('employee.data',string='Employee Data' ,default=get_current_user)
     email_employee = fields.Char(related="user_fields.email_employee")
+    questionare_log = fields.Many2one('crm.log')
     questionare_name_fields = fields.Char(string="Questionare Name")
     temporary_location_selection_fields = fields.Selection(site_list,string="Sites Selection",default="Haus Office Meruya")
     list_questions_fields = fields.One2many('crm.questions.user','questionare_id')
@@ -265,6 +266,7 @@ class CrmQuestionareUser(models.Model):
             "res_model" : self._name,
             "view_mode": "tree,form", 
             "domain": [('email_employee', '=', self.env.user.login)],
+            "context":{'create': False, 'delete': False},
         }
 
 

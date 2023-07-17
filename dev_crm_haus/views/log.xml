@@ -25,6 +25,7 @@
             <field name="name" string="Name" />
             <field name="log_date" string="Date" />
             <field name="location" strin="Location" />
+            <field name="answer_fields" string = "Answer"/>
           </group>
         </sheet>
       </form>

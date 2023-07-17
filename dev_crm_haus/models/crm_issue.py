@@ -6,7 +6,7 @@ from odoo import api, fields, models, http, _
 from datetime import datetime
 
 site_list = {
-    'name': [
+    'name':[
         ('HAUS! JKT - BINUS 1', 'HAUS! BINUS 1'),
         ('HAUS! DPK - GUNADARMA', 'HAUS! DEPOK'),
         ('HAUS! TNG - KARANG TENGAH', 'HAUS! KARANG TENGAH'),
@@ -189,19 +189,19 @@ site_list = {
         ('HAUS! TNG - BERINGIN RAYA', 'HAUS! TNG - BERINGIN RAYA'),
         ('HAUS! BGR - CIOMAS', 'HAUS! BGR - CIOMAS'),
         ('HAUS TNG - VILLA TANGERANG INDAH',
-         'HAUS TNG - VILLA TANGERANG INDAH'),
+        'HAUS TNG - VILLA TANGERANG INDAH'),
         ('HAUS! TNG - TALAGA BASTARI', 'HAUS! TNG - TALAGA BASTARI'),
         ('HAUS! JKT - SUMUR BOR', 'HAUS! JKT - SUMUR BOR'),
         ('HAUS! TNG - BUKIT SERUA INDAH', 'HAUS! TNG - BUKIT SERUA INDAH'),
         ('HAUS! TNG - CURUG', 'HAUS! TNG - CURUG'),
         ('HAUS! BGR - CITRA INDAH CITY', 'HAUS! BGR - CITRA INDAH CITY'),
         ('HAUS! DPK - MEKARSARI CIMANGGIS',
-         'HAUS! DPK - MEKARSARI CIMANGGIS'),
+        'HAUS! DPK - MEKARSARI CIMANGGIS'),
         ('HAUS! BGR - CIAPUS', 'HAUS! BGR - CIAPUS'),
         ('HAUS! DPK - PENGASINAN SAWANGAN',
-         'HAUS! DPK - PENGASINAN SAWANGAN'),
+        'HAUS! DPK - PENGASINAN SAWANGAN'),
         ('HAUS! TNG - VILLA DAGO PAMULANG',
-         'HAUS! TNG - VILLA DAGO PAMULANG'),
+        'HAUS! TNG - VILLA DAGO PAMULANG'),
         ('HAUS! TNG - HASYIM ASHARI', 'HAUS! TNG - HASYIM ASHARI'),
         ('HAUS! BGR - DURIAN RAYA', 'HAUS! BGR - DURIAN RAYA'),
         ('HAUS! DPK - JATIMULYA CILODONG', 'HAUS! DPK - JATIMULYA CILODONG'),
@@ -229,12 +229,12 @@ site_list = {
         ('HAUS! JKT - CITRA GARDEN 7', 'HAUS! JKT - CITRA GARDEN 7'),
         ('HAUS! BDG - CIUMBULEUIT', 'HAUS! BDG - CIUMBULEUIT'),
         ('HAUS! CKR - TARUM BARAT CIKARANG',
-         'HAUS! CKR - TARUM BARAT CIKARANG'),
+        'HAUS! CKR - TARUM BARAT CIKARANG'),
         ('HAUS! BKS - MUTIARA GADING', 'HAUS! BKS - MUTIARA GADING'),
         ('HAUS! BKS - SUMBER ARTHA BINTARA',
-         'HAUS! BKS - SUMBER ARTHA BINTARA'),
+        'HAUS! BKS - SUMBER ARTHA BINTARA'),
         ('HAUS! JKT - TAMAN KOTA KEMBANGAN',
-         'HAUS! JKT - TAMAN KOTA KEMBANGAN'),
+        'HAUS! JKT - TAMAN KOTA KEMBANGAN'),
         ('HAUS! BKS - MUCHTAR TABRANI', 'HAUS! BKS - MUCHTAR TABRANI'),
         ('HAUS! SBG - OTISTA', 'HAUS! SBG - OTISTA'),
         ('HAUS! JKT - STASIUN GAMBIR', 'HAUS! JKT - STASIUN GAMBIR'),
@@ -246,51 +246,42 @@ site_list = {
         ('HAUS! BDG - RANCAEKEK', 'HAUS! BDG - RANCAEKEK'),
         ('HAUS! BKS - GRAND WISATA', 'HAUS! BKS - GRAND WISATA'),
         ('HAUS! BKS - KEMANG RAYA JATICEMPAKA',
-         'HAUS! BKS - KEMANG RAYA JATICEMPAKA'),
+        'HAUS! BKS - KEMANG RAYA JATICEMPAKA'),
         ('HAUS! BKS - PLASA CIBUBUR', 'HAUS! BKS - PLASA CIBUBUR'),
         ('Haus Office Meruya', 'Haus Office Meruya'),
         ('Haus Office Sastra Graha', 'Haus Office Sastra Graha'),
     ],
-    'location': [
-        (-6.2007562, 106.7825184),
-        (-6.3548109, 106.8314291),
-        (-6.2213356, 106.7010479),
-        (-6.8633967, 107.5867264),
-        (-6.9121355, 107.6998974),
-        (-6.1693577, 106.7889386),
-        (-6.2624373, 106.7286241),
-        (-6.2336871, 106.7466062),
-        (-6.9236617, 107.559724),
-        (-6.1233645, 106.7151742),
-        (-6.1534001, 106.4278513),
-        (-6.2049496, 106.9326346),
-        (-6.1626537, 106.8631665),
-        (-6.345643, 106.8625284),
-        (-7.0645883, 110.4428938),
-        (-6.3943489, 106.9349595),
-        (-6.35338, 106.7151316),
-        (-6.1710319, 106.6770079),
-        (-6.3086683, 106.7532975),
-        # Dummy Value
-        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
-                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
-        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
-                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
-        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
-                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
-        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
-                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
-        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
-                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
-        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
-                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
-        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
-                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
-        (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1,
-                                                                                                                         1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1),
-    ]
+    'location':[
+    (-6.2007562,106.7825184),
+    (-6.3548109,106.8314291),
+    (-6.2213356,106.7010479),
+    (-6.8633967,107.5867264),
+    (-6.9121355,107.6998974),
+    (-6.1693577,106.7889386),
+    (-6.2624373,106.7286241),
+    (-6.2336871,106.7466062),
+    (-6.9236617,107.559724),
+    (-6.1233645,106.7151742),
+    (-6.1534001,106.4278513),
+    (-6.2049496,106.9326346),
+    (-6.1626537,106.8631665),
+    (-6.345643,106.8625284),
+    (-7.0645883,110.4428938),
+    (-6.3943489,106.9349595),
+    (-6.35338,106.7151316),
+    (-6.1710319,106.6770079),
+    (-6.3086683,106.7532975),
+    #Dummy Value
+    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
+    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
+    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
+    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
+    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
+    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
+    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
+    (1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),(1,1),
+   ]
 }
-
 
 class CrmIssue(models.Model):
     _name = "crm.issue"
@@ -307,36 +298,33 @@ class CrmIssue(models.Model):
     issue_comment = fields.Text(String="Comment")
     issue_attachment = fields.Binary("Attachment", attachment=True)
 
-    employee_id = fields.Many2one(
-        "employee.data", String="Employee", defaults=lambda self: self.env.user, required=True)
-    department = fields.Selection(
-        String="Departemen", related='employee_id.organization_employee')
+    
 
-    # Tambahin fungsi get_name_user
+    employee_id = fields.Many2one(
+    "employee.data", String="Employee", defaults = lambda self: self.env.user, required=True)
+    department = fields.Selection(String="Departemen", related='employee_id.organization_employee')
+
+    #Tambahin fungsi get_name_user
     def get_name_user(self):
         try:
-            search_data = self.env['employee.data'].search(
-                [('email_employee', '=', self.env.user.login), ('current_status_employee', '=', 'Active')])
+            search_data = self.env['employee.data'].search([('email_employee', '=', self.env.user.login),('current_status_employee', '=', 'Active')])
             name = search_data.mapped('first_name_employee')[0]
            # last_name = search_data.mapped('last_name_employee')[0]
             return name
         except:
             return ''
-
+            
     def get_department_user(self):
         try:
-            search_data = self.env['employee.data'].search(
-                [('email_employee', '=', self.env.user.login)])
+            search_data = self.env['employee.data'].search([('email_employee', '=', self.env.user.login)])
             position = search_data.mapped('organization_employee')[0]
             return position
         except:
             return ''
-
-    # Tambahin nama user (first_name + last_name)
-    reporter_name = fields.Char(
-        String="Reporter Name", readonly=True, default=get_name_user)
-    department_reporter = fields.Char(
-        String="Halo", readonly=True, default=get_department_user)
+    
+    #Tambahin nama user (first_name + last_name)
+    reporter_name = fields.Char(String="Reporter Name", readonly=True ,default=get_name_user)
+    department_reporter = fields.Char(String="Halo", readonly=True ,default=get_department_user)
 
     def get_email(self):
         try:
@@ -355,6 +343,7 @@ class CrmIssue(models.Model):
     reporter_email = fields.Char(
         String="Reporter Email", readonly=True, default=get_email)
 
+
     temporary_location_selection = fields.Selection(site_list['name'],
                                                     string="Sites Selection", default="Haus Office Meruya")
 
@@ -362,7 +351,17 @@ class CrmIssue(models.Model):
         [('0', 'Not Important'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High')], string='Priority', default='1')
 
     state = fields.Selection(
-        [('not_solved', 'Not Solved'), ('solved', 'Solved')], default='not_solved', string="State")
+        [('not_solved', 'Not Solved'), ('solved', 'Solved')], default='not_solved', string="State", readonly=True)
+
+    current_user_reporter = fields.Boolean(string="Is Cureent User Reporter ?", compute='get_current_users_reporter', track_visibility='onchange')
+
+
+    @api.depends('current_user_reporter')
+    def get_current_users_reporter(self):
+        if self.env.user.login == self.employee_id.email_employee:
+            self.current_user_reporter = True
+        else:
+            self.current_user_reporter = False
 
     # kirim email notifikasi ketika issue dibuat
     def notif_email(self):
@@ -373,7 +372,7 @@ class CrmIssue(models.Model):
         template_data = {
             'subject': 'Haus Issue Letter',
             'body_html': f'<h1>Dear {self.employee_name}</h1> <h2> kamu mendapatkan masalah/issue berupa {self.issue_problem} dari {self.reporter_name} di cabang {self.temporary_location_selection} </h2>  <p> pada tanggal <b>{self.created_at}</b> dengan kategori {self.issue_category.name} dan prioritas {self.priority} dengan deadline <b>{self.issue_due_date}</b> dengan catatan {self.issue_comment} </p>',
-            'email_from': 'hrdummyhaus1@gmail.com',
+            'email_from': 'erphaus@gmail.com',
             'auto_delete': True,
             'email_to': self.employee_email,
             'attachment_ids': [(4, attachment.id)]
@@ -391,7 +390,7 @@ class CrmIssue(models.Model):
         template_data = {
             'subject': 'Haus Solved Issue Letter',
             'body_html': f'<h1>Dear {self.reporter_name}</h1> <h2> issue kamu dengan judul {self.issue_problem} telah selesai di {self.temporary_location_selection} </h2>  <p> pada tanggal <b>{self.created_at}</b> dengan kategori {self.issue_category.name} dan prioritas {self.priority} dengan deadline <b>{self.issue_due_date}</b> dengan catatan {self.issue_comment} </p>',
-            'email_from': 'hrdummyhaus1@gmail.com',
+            'email_from': 'erphaus@gmail.com',
             'auto_delete': True,
             'email_to': self.reporter_email,
         }
@@ -408,13 +407,13 @@ class CrmIssue(models.Model):
         template_data = {
             'subject': 'Haus Not Solved Issue Letter',
             'body_html': f'<h1>Dear {self.reporter_name}</h1> <h2> issue kamu dengan judul {self.issue_problem} belum selesai di {self.temporary_location_selection} </h2>  <p> pada tanggal <b>{self.created_at}</b> dengan kategori {self.issue_category.name} dan prioritas {self.priority} dengan deadline <b>{self.issue_due_date}</b> dengan catatan {self.issue_comment} </p>',
-            'email_from': 'hrdummyhaus1@gmail.com',
+            'email_from': 'erphaus@gmail.com',
             'auto_delete': True,
             'email_to': self.reporter_email,
         }
         mail_id = self.env['mail.mail'].sudo().create(template_data)
         mail_id.sudo().send()
-
+        
     # fungsi untuk mengirim email ketika deadline kurang 3 hari
     @api.model
     def send_deadline_email(self):
@@ -424,15 +423,14 @@ class CrmIssue(models.Model):
             template_data = {
                 'subject': 'Haus Deadline Issue Letter',
                 'body_html': f'Deadline issue kamu dengan judul {self.issue_problem} akan berakhir dalam 3 hari di {self.temporary_location_selection}',
-                'email_from': 'hrdummyhaus1@gmail.com',
+                'email_from': 'erphaus@gmail.com',
                 'auto_delete': True,
                 'email_to': self.employee_email,
             }
             mail_id = self.env['mail.mail'].sudo().create(template_data)
             mail_id.sudo().send()
 
-    check_is_reporter_login = fields.Boolean(
-        string="Reporter Login? ", default=True, compute='get_user_login_reporter')
+    check_is_reporter_login = fields.Boolean(string="Reporter Login? ", default=True, compute='get_user_login_reporter')
 
     @api.depends('check_is_reporter_login')
     def get_user_login_reporter(self):
@@ -442,140 +440,26 @@ class CrmIssue(models.Model):
         else:
             self.check_is_reporter_login = False
 
-#   -->GEO User Location<--
-    latitude = fields.Float(string='Latitude',)
-    longitude = fields.Float(string='Longitude',)
-    is_nearby = fields.Boolean('Is nearby?', default=False)
 
-    # Onchange Based on field temporary_location_selection
-    @api.onchange('temporary_location_selection')
-    def _onchange_temporary_location_selection(self):
-        def is_nearby_calc(lat1, lon1, lat2, lon2):
-            radius = 6371  # km
-            dlat = math.radians(lat2 - lat1)
-            dlon = math.radians(lon2 - lon1)
-            a = (math.sin(dlat / 2) * math.sin(dlat / 2) +
-                 math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
-                 math.sin(dlon / 2) * math.sin(dlon / 2))
-            c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-            d = radius * c
-            return d  # Distance in KM
-
-        i = 0
-        for site_name, _ in site_list['name']:
-            if site_name == self.temporary_location_selection:
-                distance = is_nearby_calc(
-                    lat1=self.latitude,
-                    lon1=self.longitude,
-                    lat2=site_list['location'][i][0],
-                    lon2=site_list['location'][i][1],
-                )
-                # Untuk Debugging
-                self.issue_problem = f'lat:{self.latitude}; long:{self.longitude}'
-                if distance < 1:
-                    self.is_nearby = True
-                    self.issue_comment = f'distance: {distance}'
-                else:
-                    self.is_nearby = False
-                    self.issue_comment = f'distance: {distance}'
-                break
-            i += 1
-
-    # email card template
-
-    def fitur_email(self):
-        # current time
-        datetime_now = datetime.now()
-        current_time = datetime_now.strftime("%Y-%m-%d %H:%M:%S")
-        template_data = {
-            'subject': 'Haus Issue Letter',
-            'body_html': f'''
-              <!DOCTYPE html>
-                <html>
-                <head>
-                <link rel="preconnect" href="https://fonts.googleapis.com">
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Caprasimo&display=swap" rel="stylesheet">
-                    <style>
-                    .wrapper {{
-                        background-color: #e0e0e0;
-                        display: flex;
-                        justify-content: center !important;
-                        align-items: center !important;
-                        height: 50vh;
-                        width: 100%;
-                    }}
-
-                    .card {{
-                        margin: auto;
-                        width: 500px;
-                        height: max-content;
-                        background-color: #fff;
-                        border: 1px solid #ccc;
-                        border-radius: 4px;
-                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                    }}
-
-                    .card img {{
-                        width: 70px;
-                        height: auto;
-                        margin-right: 200px;
-                    }}
-
-                    .card-head {{
-                        padding: 10px;
-                        border-bottom: 1px solid #989898;
-                        display: flex;
-                        align-items: center;
-                        font-family: 'Bree Serif', serif;
-                        font-size: 16px;
-                    }}
-
-                    .card-content {{
-                        padding: 10px;
-                        font-family: 'Bree Serif', serif;
-                        font-size: 14px;
-                    }}
-
-                    .card-title {{
-                        font-size: 18px;
-                        font-weight: bold;
-                        margin: 0;
-                    }}
-
-                    .card-description {{
-                        margin : 0;
-                        font-size: 20px;
-                        color: #555;
-                    }}
-                    </style>
-                </head>
-
-                <body>
-                   <div class="wrapper">
-                     <div class="card">
-                        <div class="card-head">
-                            <img src="https://i.ibb.co/pLLGDcF/haus.png" alt="Card Image">
-                            <h4>PT. Inspirasi Bisnis Nusantara</h4>
-                        </div>
-                        <div class="card-content">
-                            <p class="card-description">Dear {self.reporter_name}</p>
-                            <p> kamu mendapatkan masalah/issue berupa {self.issue_problem} dari {self.reporter_name} di cabang
-                            {self.temporary_location_selection} </p>
-                            <p> pada tanggal <b>{current_time}</b> dengan kategori {self.issue_category.name} dan prioritas
-                            {self.priority}dengan deadline <b>{self.issue_due_date}</b> dengan catatan {self.issue_comment} </p>
-                        </div>
-                    </div>
-                   </div>
-                </body>
-
-                </html>
-            ''',
-            'email_from': 'hrdummyhaus1@gmail.com',
-            'auto_delete': True,
-            # 'email_to': 'skarsputri@gmail.com',
-            'email_to': 'jokopranowow99@gmail.com',
-
+#Return Menu
+    def issue_requested_list(self):
+        return{
+            'name': 'Requested Issue',
+            "type": "ir.actions.act_window",
+            "help": "No Request Yet !!!",
+            "res_model": self._name,
+            "view_mode": "tree,form",
+            "domain": [('employee_id.email_employee', '=', self.env.user.login),('state', '=', 'not_solved')],
+            "context": {'delete': False,'create':False},
         }
-        mail_id = self.env['mail.mail'].sudo().create(template_data)
-        mail_id.sudo().send()
+
+    def your_requested_issue_list(self):
+        return{
+            'name': 'Your Requested Issue',
+            "type": "ir.actions.act_window",
+            "help": "No Request Yet !!!",
+            "res_model": self._name,
+            "view_mode": "tree,form",
+            "domain": [('reporter_email', '=', self.env.user.login),('state', '=', 'not_solved')],
+            "context": {'delete': False},
+        }

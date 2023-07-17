@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="crm_record_rule" model="ir.rule">
-        <field name="name">CRM Record Rule</field>
-        <field name="model_id" ref="dev_crm_haus.model_crm_issue" />
-        <field name="domain_force">['|', ('reporter_email','=',user.login), ('employee_email','=',user.login)]</field>
-        <field name="global" eval="True" />
+    <record model="ir.module.category" id = "module_category_crm_group">
+        <field name="name"> CRM Admin Group </field>
+        <field name="description"> Category For CRM  </field>
+        <field name="sequence">45</field>
     </record>
+
+    <record id="group_crm_questioner_admin" model="res.groups">
+        <field name="name"> Admin </field>
+        <field name="category_id" ref="module_category_crm_group"/>
+    </record>
+
 </odoo>

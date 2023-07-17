@@ -67,4 +67,14 @@
         </field>
     </record>
 
+    <record model="ir.actions.server" id="action_list_user_questioner"> 
+        <field name="name">Questionare</field> 
+        <field name="model_id" ref="dev_crm_haus.model_crm_questionare_user"/> 
+        <field name="state">code</field> 
+        <field name="code"> 
+            action = model.sudo().list_data_user_questioner() 
+        </field> 
+    </record>
+
+
 </odoo>

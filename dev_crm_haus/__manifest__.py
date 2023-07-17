@@ -10,29 +10,22 @@
     'depends': [
         'sale',
         'mail',
-        'website_slides',
         'board',
         'dev_employee_master_data',
 
     ],
     'data': [
         'security/ir.model.access.csv',
+        'security/security.xml',
+        'views/issue.xml',
         'views/category.xml',
         'views/log.xml',
         'views/questionare_admin.xml',
         'views/questionare_user.xml',
         'wizard/views/download_questionare.xml',
-        'views/issue.xml',
         'views/menu.xml',
     ],
-    'js': [
-        'static/src/js/coordinates.js',  # Add this line to include your JavaScript file
-    ],
-    'assets': {
-        'web.assets_backend': [
-            'dev_crm_haus/static/**/*',
-        ],
-    },
+
     'demo': [],
     'qweb': [],
     'installable': True,

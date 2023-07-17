@@ -245,16 +245,28 @@ class CrmQuestionareAdmin(models.Model):
     _description = "CRM Questionare Form"
     _rec_name = "questionare_name_fields"
 
+    @api.model
+    def create(self,vals):
+        vals['status'] = 'submitted'
+        rec = super(CrmQuestionareAdmin, self).create(vals)
+        return rec
+
+    def unlink(self):
+        self.env['crm.questionare.user'].search([('questionare_name_fields', '=', self.questionare_name_fields)]).sudo().unlink()
+        return super(CrmQuestionareAdmin, self).unlink()
 
     questionare_name_fields = fields.Char(string="Questionare Name")
+    logging_fields = fields.One2many('crm.log','id_questioner',compute='_compute_logging_fields')
     temporary_location_selection_fields = fields.Selection(site_list,
     string="Sites Selection",default="Haus Office Meruya")
-    
     list_questions_fields = fields.One2many('crm.questions.admin','questionare_id')
-    
-    list_log = fields.One2many('crm.log', 'log_id', compute="_compute_list_log", readonly=True)
+    status = fields.Selection([('drafted','Drafted'),
+    ('submitted','Submitted')
+    ],string='status',default='drafted')
 
-    def _compute_list_log(self):
-        log_model = self.env['crm.log']
-        log_records = log_model.search([('location', '=', self.temporary_location_selection_fields)])
-        self.list_log = log_records
+
+    @api.depends('questionare_name_fields')
+    def _compute_logging_fields(self):
+        for record in self:
+            record.logging_fields = self.env['crm.log'].search([('questioner', '=', record.questionare_name_fields)])
+ 

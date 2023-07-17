@@ -1,30 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+
     <record id="view_questionare_admin_form" model="ir.ui.view">
         <field name="name">crm.questionare.admin.form</field>
         <field name="model">crm.questionare.admin</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <field name="status" invisible="1" />
+                </header>
                 <sheet>
-                    <group class="row">
-                        <group class="col">
-                            <field name="questionare_name_fields" string="Questionare Name"/>
-                            <field name="list_questions_fields">
+                    <group>
+                        <group>
+                            <field name="questionare_name_fields" string="Questionare Name" attrs="{'readonly':[('status','=','submitted')]}"/>
+                            <field name="list_questions_fields" attrs="{'readonly':[('status','=','submitted')]}">
                                 <tree string="List Of Question">
                                     <field name="question_audit_fields"/>
                                 </tree>
                             </field>
                         </group>
-                        <group class="col">
-                            <field name="temporary_location_selection_fields" string = "Priority"/>
-                            <field name="list_log" string="Log of Downloaded User">
-                                <tree>
-                                    <field name="name"/>
-                                    <field name="log_date"/>
-                                </tree>
-                            </field>
+                        <group>
+                            <field name="temporary_location_selection_fields" string="Location" attrs="{'readonly':[('status','=','submitted')]}"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Logging Data" name="logging data">
+                            <field name="logging_fields" string = "Logging">
+                                <tree string="Questioner Log">
+                                    <field name="name"/>
+                                    <field name="log_date" string="Date" />
+                                    <field name="location" strin="Location" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

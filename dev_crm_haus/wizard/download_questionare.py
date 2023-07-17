@@ -346,7 +346,10 @@ class download_questionare(models.TransientModel):
                     # Make record in model log
                     self.env['crm.log'].sudo().create({
                         'name': self.env.user.name,
+                        'email':self.env.user.login,
                         'location': self.temporary_location_selection_fields,
+                        'log_date':self.downloaded_date,
+                        'questioner':full_data.mapped('questionare_name_fields')[i],
                     })
 
                     def my_filtering_function_content(pair):
@@ -367,7 +370,7 @@ class download_questionare(models.TransientModel):
                         filter(my_filtering_function_content, dict_data.items()))
                     print(filtered_grades)
                     search_data_3 = self.env['crm.questionare.user'].search(
-                        [('questionare_name_fields', '=', full_data.mapped('questionare_name_fields')[i])])
+                        [('questionare_name_fields', '=', full_data.mapped('questionare_name_fields')[i]),('email_employee', '=', self.env.user.login)])
                     search_data_3.sudo().write({
                         'list_questions_fields': list(filtered_grades.values())
                     })
