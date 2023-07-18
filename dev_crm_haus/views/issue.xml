@@ -14,6 +14,23 @@
         </field>
     </record>
 
+
+    <record id="view_crm_group_assigned_issue_form" model="ir.ui.view">
+        <field name="name">crm.group.assigned.issue.form</field>
+        <field name="model">crm.group.assigned.issue</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="assigned_employee"/>
+                        <field name="department"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
     <!-- form view dari issue -->
     <record id="view_issue_form" model="ir.ui.view">
         <field name="name">crm.issue.form</field>
@@ -35,8 +52,12 @@
                             <field name="state" string="Status"></field>
                         </group>
                         <group>
-                            <field name="employee_id" attrs="{'readonly':[('current_user_reporter','=',True)]}"  string="Employee"></field>
-                            <field name="department"  string="Departement"></field>
+                            <field name="assigned_employee">
+                                <tree string="Assigned Employee">
+                                    <field name="assigned_employee"/>
+                                    <field name="department"/>
+                                </tree>
+                            </field>
                             <field name="temporary_location_selection" attrs="{'readonly':[('current_user_reporter','=',True)]}"></field>
                             <field name="issue_problem" string="Issues" attrs="{'readonly':[('current_user_reporter','=',True)]}" />
                             <field name="issue_category" string="Category" attrs="{'readonly':[('current_user_reporter','=',True)]}" />

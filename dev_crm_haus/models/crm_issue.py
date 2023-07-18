@@ -283,6 +283,8 @@ site_list = {
    ]
 }
 
+
+
 class CrmIssue(models.Model):
     _name = "crm.issue"
     _inherit = ["mail.thread", "mail.activity.mixin"]
@@ -303,7 +305,8 @@ class CrmIssue(models.Model):
     employee_id = fields.Many2one(
     "employee.data", String="Employee", defaults = lambda self: self.env.user, required=True)
     department = fields.Selection(String="Departemen", related='employee_id.organization_employee')
-
+    assigned_employee = fields.One2many('crm.group.assigned.issue','id_issue',string="Assigned Users")
+    
     #Tambahin fungsi get_name_user
     def get_name_user(self):
         try:
@@ -441,7 +444,7 @@ class CrmIssue(models.Model):
             self.check_is_reporter_login = False
 
 
-#Return Menu
+
     def issue_requested_list(self):
         return{
             'name': 'Requested Issue',
@@ -463,3 +466,15 @@ class CrmIssue(models.Model):
             "domain": [('reporter_email', '=', self.env.user.login),('state', '=', 'not_solved')],
             "context": {'delete': False},
         }
+
+class CrmGroupAssignedIssue(models.Model):
+    _name = "crm.group.assigned.issue"
+    _description = "CRM Group Of assigned Users"
+    _rec_name = "assigned_employee"
+
+    id_issue = fields.Many2one('crm.issue')
+    assigned_employee = fields.Many2one("employee.data", String="Employee", defaults = lambda self: self.env.user, required=True)
+    department = fields.Selection(string="Departement", related='assigned_employee.organization_employee')
+    email_employee = fields.Char(string="Email Employee", related='assigned_employee.email_employee')
+
+    

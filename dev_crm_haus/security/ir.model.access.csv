@@ -7,3 +7,4 @@ access_crm_questionare_user,access.crm.questionare.user,model_crm_questionare_us
 access_crm_questions_user,access.crm.questions.user,model_crm_questions_user,,1,1,1,1
 access_download_questionare,access.download.questionare,model_download_questionare,,1,1,1,1
 access_crm_log,access.crm.log,model_crm_log,,1,1,1,1
+access_crm_group_assigned_issue,access.crm.group.assigned.issue,model_crm_group_assigned_issue,,1,1,1,1
