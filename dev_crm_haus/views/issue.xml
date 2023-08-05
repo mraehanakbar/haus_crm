@@ -9,6 +9,7 @@
             <tree>
                 <field name="issue_problem" string="Issues" />
                 <field name="issue_category" string="Category" />
+                <field name="issue_due_date" string="Deadline Issue" />
                 <field name="issue_comment" string="Comment" />
             </tree>
         </field>
@@ -46,12 +47,15 @@
                             <field name="temporary_location_selection"></field>
                             <field name="issue_problem" string="Issues" />
                             <field name="issue_category" string="Category" />
+                            <field name="issue_due_date" string="Deadline Issue" />
                             <field name="issue_comment" string="Comment" />
                         </group>
                     </sheet>
                     <group>
                         <field name="issue_attachment" string="Attachment" />
-                        <button name="fitur_email" string="Send email" type="object"
+                        <button name="deadline_email" string="tester1" type="object"
+                            class="oe_highlight" />
+                        <button name="function1" string="tester2" type="object"
                             class="oe_highlight" />
                     </group>
                 </sheet>

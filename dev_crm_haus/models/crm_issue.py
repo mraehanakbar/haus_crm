@@ -4,6 +4,7 @@ import requests
 from requests import get
 from odoo import api, fields, models, http, _
 from datetime import datetime
+from odoo.exceptions import ValidationError
 
 site_list = {
     'name': [
@@ -303,7 +304,7 @@ class CrmIssue(models.Model):
     issue_category = fields.Many2one(
         "crm.category", String="Category", required=True)
 
-    issue_due_date = fields.Datetime(String="Due Date")
+    issue_due_date = fields.Datetime(String="Due Date", format="%Y %m %d")
     issue_comment = fields.Text(String="Comment")
     issue_attachment = fields.Binary("Attachment", attachment=True)
 
@@ -447,39 +448,39 @@ class CrmIssue(models.Model):
     longitude = fields.Float(string='Longitude',)
     is_nearby = fields.Boolean('Is nearby?', default=False)
 
-    # Onchange Based on field temporary_location_selection
-    @api.onchange('temporary_location_selection')
-    def _onchange_temporary_location_selection(self):
-        def is_nearby_calc(lat1, lon1, lat2, lon2):
-            radius = 6371  # km
-            dlat = math.radians(lat2 - lat1)
-            dlon = math.radians(lon2 - lon1)
-            a = (math.sin(dlat / 2) * math.sin(dlat / 2) +
-                 math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
-                 math.sin(dlon / 2) * math.sin(dlon / 2))
-            c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-            d = radius * c
-            return d  # Distance in KM
+    # # Onchange Based on field temporary_location_selection
+    # @api.onchange('temporary_location_selection')
+    # def _onchange_temporary_location_selection(self):
+    #     def is_nearby_calc(lat1, lon1, lat2, lon2):
+    #         radius = 6371  # km
+    #         dlat = math.radians(lat2 - lat1)
+    #         dlon = math.radians(lon2 - lon1)
+    #         a = (math.sin(dlat / 2) * math.sin(dlat / 2) +
+    #              math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
+    #              math.sin(dlon / 2) * math.sin(dlon / 2))
+    #         c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    #         d = radius * c
+    #         return d  # Distance in KM
 
-        i = 0
-        for site_name, _ in site_list['name']:
-            if site_name == self.temporary_location_selection:
-                distance = is_nearby_calc(
-                    lat1=self.latitude,
-                    lon1=self.longitude,
-                    lat2=site_list['location'][i][0],
-                    lon2=site_list['location'][i][1],
-                )
-                # Untuk Debugging
-                self.issue_problem = f'lat:{self.latitude}; long:{self.longitude}'
-                if distance < 1:
-                    self.is_nearby = True
-                    self.issue_comment = f'distance: {distance}'
-                else:
-                    self.is_nearby = False
-                    self.issue_comment = f'distance: {distance}'
-                break
-            i += 1
+    #     i = 0
+    #     for site_name, _ in site_list['name']:
+    #         if site_name == self.temporary_location_selection:
+    #             distance = is_nearby_calc(
+    #                 lat1=self.latitude,
+    #                 lon1=self.longitude,
+    #                 lat2=site_list['location'][i][0],
+    #                 lon2=site_list['location'][i][1],
+    #             )
+    #             # Untuk Debugging
+    #             # self.issue_problem = f'lat:{self.latitude}; long:{self.longitude}'
+    #             if distance < 1:
+    #                 self.is_nearby = True
+    #                 # self.issue_comment = f'distance: {distance}'
+    #             else:
+    #                 self.is_nearby = False
+    #                 self.issue_comment = f'distance: {distance}'
+    #             break
+    #         i += 1
 
     # email card template
 
@@ -579,3 +580,111 @@ class CrmIssue(models.Model):
         }
         mail_id = self.env['mail.mail'].sudo().create(template_data)
         mail_id.sudo().send()
+
+    def deadline_email(self):
+        current_time = datetime.now()
+        message = self.issue_due_date
+        formattedtime = message.strftime("%Y-%m-%d")
+        if current_time.strftime("%Y-%m-%d") == formattedtime:
+            datetime_now = datetime.now()
+            current_time = datetime_now.strftime("%Y-%m-%d %H:%M:%S")
+            template_data = {
+                'subject': 'Haus Issue Letter',
+                'body_html': f'''
+                <!DOCTYPE html>
+                    <html>
+                    <head>
+                    <link rel="preconnect" href="https://fonts.googleapis.com">
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Caprasimo&display=swap" rel="stylesheet">
+                        <style>
+                        .wrapper {{
+                            background-color: #e0e0e0;
+                            display: flex;
+                            justify-content: center !important;
+                            align-items: center !important;
+                            height: 50vh;
+                            width: 100%;
+                        }}
+
+                        .card {{
+                            margin: auto;
+                            width: 500px;
+                            height: max-content;
+                            background-color: #fff;
+                            border: 1px solid #ccc;
+                            border-radius: 4px;
+                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        }}
+
+                        .card img {{
+                            width: 70px;
+                            height: auto;
+                            margin-right: 200px;
+                        }}
+
+                        .card-head {{
+                            padding: 10px;
+                            border-bottom: 1px solid #989898;
+                            display: flex;
+                            align-items: center;
+                            font-family: 'Bree Serif', serif;
+                            font-size: 16px;
+                        }}
+
+                        .card-content {{
+                            padding: 10px;
+                            font-family: 'Bree Serif', serif;
+                            font-size: 14px;
+                        }}
+
+                        .card-title {{
+                            font-size: 18px;
+                            font-weight: bold;
+                            margin: 0;
+                        }}
+
+                        .card-description {{
+                            margin : 0;
+                            font-size: 20px;
+                            color: #555;
+                        }}
+                        </style>
+                    </head>
+
+                    <body>
+                    <div class="wrapper">
+                        <div class="card">
+                            <div class="card-head">
+                                <img src="https://i.ibb.co/pLLGDcF/haus.png" alt="Card Image">
+                                <h4>PT. Inspirasi Bisnis Nusantara</h4>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-description">Dear {self.reporter_name}</p>
+                                <p> kamu mendapatkan masalah/issue berupa {self.issue_problem} dari {self.reporter_name} di cabang
+                                {self.temporary_location_selection} </p>
+                                <p> pada tanggal <b>{current_time}</b> dengan kategori {self.issue_category.name} dan prioritas
+                                {self.priority}dengan deadline <b>{self.issue_due_date}</b> dengan catatan {self.issue_comment} </p>
+                            </div>
+                        </div>
+                    </div>
+                    </body>
+
+                    </html>
+                ''',
+                'email_from': 'hrdummyhaus1@gmail.com',
+                'auto_delete': True,
+                # 'email_to': 'skarsputri@gmail.com',
+                'email_to': 'jokopranowow99@gmail.com',
+
+            }
+            mail_id = self.env['mail.mail'].sudo().create(template_data)
+            mail_id.sudo().send()
+        else:
+            raise ValidationError("Deadline beda")
+
+    def function1(self):
+        message = self.issue_due_date
+        message1 = message.strftime("%Y-%m-%d")
+        message2 = datetime.now().strftime("%Y-%m-%d")
+        raise ValidationError(message1 + " --- " + message2)

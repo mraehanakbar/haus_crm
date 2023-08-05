@@ -17,6 +17,8 @@
     ],
     'data': [
         'security/ir.model.access.csv',
+        'data/cron_email.xml',
+        'data/cron_category.xml',
         'views/category.xml',
         'views/log.xml',
         'views/questionare_admin.xml',

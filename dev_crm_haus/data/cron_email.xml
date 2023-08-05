@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+  <data noupdate="1">
+    <record id="ir_scheduler_deadline_email_cron" model="ir.cron">
+      <field name="name">Send Deadline Email Action</field>
+      <field name="model_id" ref="model_crm_issue" />
+      <field name="state">code</field>
+      <field name="code">model.deadline_email()</field>
+      <field name="user_id" ref="base.user_root" />
+      <field name="interval_number">1</field>
+      <field name="interval_type">days</field>
+      <field name="numbercall">-1</field>
+    </record>
+  </data>
+
+</odoo>

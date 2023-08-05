@@ -394,7 +394,6 @@ class download_questionare(models.TransientModel):
                             'title': 'Download Quisioner Berhasil',
                             'message': message,
                             'type': 'success',
-                            'url': f'  # action
                             'timer': 3,
                             'sticky': True,
                         }
