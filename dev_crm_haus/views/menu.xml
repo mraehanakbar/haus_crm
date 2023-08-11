@@ -43,8 +43,8 @@
         id="crm_questionare_master"
         name="Questionare Admin"
         parent="crm_root"
-        action="action_questionare_admin"
         groups="dev_crm_haus.group_crm_questioner_admin"
+        action="action_questionare_admin"
         sequence="3"
     />
 
@@ -54,22 +54,6 @@
         parent="crm_root"
         action="action_list_user_questioner"
         sequence="4"
-    />
-
-    <menuitem
-        id="crm_questionare_master_download"
-        name="Questionare Download"
-        parent="crm_root"
-        action="action_download_questionare"
-        sequence="5"
-    />
-    <menuitem
-        id="crm_log_master"
-        name="Log Downloaded User"
-        parent="crm_root"
-        action="action_log_register"
-        groups="dev_crm_haus.group_crm_questioner_admin"
-        sequence="6"
     />
 
 </odoo>

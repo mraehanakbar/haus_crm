@@ -4,6 +4,7 @@ import requests
 from requests import get
 from odoo import api, fields, models, http, _
 from datetime import datetime
+from odoo.exceptions import ValidationError
 
 site_list = {
     'name':[
@@ -291,6 +292,13 @@ class CrmIssue(models.Model):
     _description = "CRM Issue Form"
     _rec_name = "issue_problem"
 
+    @api.model
+    def create(self, vals):
+        res = super(CrmIssue, self).create(vals)
+        if not vals.get('assigned_employee'):
+            raise ValidationError("Tidak Ada User Yang Di Assign")
+        return res
+
     # Define Some Fields Or Function Here
     issue_problem = fields.Char(String="Problem", required=True)
     issue_category = fields.Many2one(
@@ -299,13 +307,8 @@ class CrmIssue(models.Model):
     issue_due_date = fields.Datetime(String="Due Date")
     issue_comment = fields.Text(String="Comment")
     issue_attachment = fields.Binary("Attachment", attachment=True)
-
-    
-
-    employee_id = fields.Many2one(
-    "employee.data", String="Employee", defaults = lambda self: self.env.user, required=True)
-    department = fields.Selection(String="Departemen", related='employee_id.organization_employee')
     assigned_employee = fields.One2many('crm.group.assigned.issue','id_issue',string="Assigned Users")
+    issue_checkin = fields.One2many('crm.activity.checkin','id_issue',string="Issue Checkin")
     
     #Tambahin fungsi get_name_user
     def get_name_user(self):
@@ -345,26 +348,18 @@ class CrmIssue(models.Model):
         String="Reporter Department", readonly=True, default=get_department_user)
     reporter_email = fields.Char(
         String="Reporter Email", readonly=True, default=get_email)
-
+    check_is_reporter_login = fields.Boolean(string="is reporter login", compute="get_user_login_reporter", default=True)
 
     temporary_location_selection = fields.Selection(site_list['name'],
-                                                    string="Sites Selection", default="Haus Office Meruya")
+                                                    string="Sites Selection", default="Haus Office Meruya",required=True)
 
     priority = fields.Selection(
-        [('0', 'Not Important'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High')], string='Priority', default='1')
+        [('0', 'Not Important'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High')], string='Priority', default='1',required=True)
 
     state = fields.Selection(
-        [('not_solved', 'Not Solved'), ('solved', 'Solved')], default='not_solved', string="State", readonly=True)
+        [('not_solved', 'Not Solved'), ('solved', 'Solved')], default='not_solved', string="State",required=True)
+    detail_of_issue = fields.Text(string="Details Of Issue")
 
-    current_user_reporter = fields.Boolean(string="Is Cureent User Reporter ?", compute='get_current_users_reporter', track_visibility='onchange')
-
-
-    @api.depends('current_user_reporter')
-    def get_current_users_reporter(self):
-        if self.env.user.login == self.employee_id.email_employee:
-            self.current_user_reporter = True
-        else:
-            self.current_user_reporter = False
 
     # kirim email notifikasi ketika issue dibuat
     def notif_email(self):
@@ -416,24 +411,6 @@ class CrmIssue(models.Model):
         }
         mail_id = self.env['mail.mail'].sudo().create(template_data)
         mail_id.sudo().send()
-        
-    # fungsi untuk mengirim email ketika deadline kurang 3 hari
-    @api.model
-    def send_deadline_email(self):
-        deadline_date = self.issue_due_date - timedelta(days=3)
-        records = self.search([('issue_due_date', '=', deadline_date)])
-        if records:
-            template_data = {
-                'subject': 'Haus Deadline Issue Letter',
-                'body_html': f'Deadline issue kamu dengan judul {self.issue_problem} akan berakhir dalam 3 hari di {self.temporary_location_selection}',
-                'email_from': 'erphaus@gmail.com',
-                'auto_delete': True,
-                'email_to': self.employee_email,
-            }
-            mail_id = self.env['mail.mail'].sudo().create(template_data)
-            mail_id.sudo().send()
-
-    check_is_reporter_login = fields.Boolean(string="Reporter Login? ", default=True, compute='get_user_login_reporter')
 
     @api.depends('check_is_reporter_login')
     def get_user_login_reporter(self):
@@ -452,7 +429,7 @@ class CrmIssue(models.Model):
             "help": "No Request Yet !!!",
             "res_model": self._name,
             "view_mode": "tree,form",
-            "domain": [('employee_id.email_employee', '=', self.env.user.login),('state', '=', 'not_solved')],
+            "domain": [('assigned_employee.assigned_email', '=', self.env.user.login),('state', '=', 'not_solved')],
             "context": {'delete': False,'create':False},
         }
 
@@ -467,14 +444,56 @@ class CrmIssue(models.Model):
             "context": {'delete': False},
         }
 
+
 class CrmGroupAssignedIssue(models.Model):
     _name = "crm.group.assigned.issue"
     _description = "CRM Group Of assigned Users"
     _rec_name = "assigned_employee"
 
+    @api.model
+    def create(self,vals):
+        print(vals['assigned_name'])
+        res = super(CrmGroupAssignedIssue, self).create(vals)
+        return res
+
     id_issue = fields.Many2one('crm.issue')
-    assigned_employee = fields.Many2one("employee.data", String="Employee", defaults = lambda self: self.env.user, required=True)
+    issue_name = fields.Char(related="id_issue.issue_problem")
+    assigned_employee = fields.Many2one("employee.data", String="Employee", domain=lambda self: [('email_employee','!=',self.env.user.login),('current_status_employee','=','Active')], defaults = lambda self: self.env.user, required=True)
+    assigned_name = fields.Char(related="assigned_employee.first_name_employee")
+    assigned_email = fields.Char(related="assigned_employee.email_employee")
     department = fields.Selection(string="Departement", related='assigned_employee.organization_employee')
     email_employee = fields.Char(string="Email Employee", related='assigned_employee.email_employee')
-
+    has_been_notified =  fields.Boolean(string="Is The User Have Been Notifed Before")
     
+    _sql_constraints = [('assigned_employee', 'unique (assigned_employee)', 'Dont Add Multiple Same Users'),]
+
+   
+
+class CrmActivityCheckin(models.Model):
+    _name = "crm.activity.checkin"
+    _description = "CRM Group Of assigned Users"
+    _rec_name = "involved_employee"
+
+    def get_current_user(self):
+        data = self.env['employee.data'].search([('email_employee','=',self.env.user.login)], limit=1)
+        return data
+
+    id_issue = fields.Many2one('crm.issue')
+    issue_name = fields.Char(related="id_issue.issue_problem")
+    involved_employee = fields.Many2one("employee.data", string="Employee", default=get_current_user, readonly=True)
+    involved_employee_email = fields.Char(related='involved_employee.email_employee')
+    involved_employee_desc = fields.Text(string="Description")
+    involved_employee_attachments = fields.Binary(string='Attachments', attachment=True)
+    file_involved_employee_attachments = fields.Char("File Name")
+    involved_employee_status = fields.Selection([
+        ('done','Done'),
+        ('not_done','Not Done'),
+    ], string="Status Of Checkin")
+    current_assigned_user_login = fields.Boolean(string='is user login?',compute='_is_current_assigned_user_login')
+
+    @api.depends('involved_employee_email')
+    def _is_current_assigned_user_login(self):
+        if self.involved_employee_email == self.env.user.login:
+            self.current_assigned_user_login = True
+        else:
+            self.current_assigned_user_login = False

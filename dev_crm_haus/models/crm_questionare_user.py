@@ -1,7 +1,8 @@
 from email.policy import default
 from odoo import api, fields, models, _
 from datetime import datetime
-
+import pytz
+from odoo.exceptions import ValidationError
 site_list = [('HAUS! JKT - BINUS 1', 'HAUS! BINUS 1'),
     ('HAUS! DPK - GUNADARMA', 'HAUS! DEPOK'),
     ('HAUS! TNG - KARANG TENGAH', 'HAUS! KARANG TENGAH'),
@@ -249,14 +250,44 @@ class CrmQuestionareUser(models.Model):
         data = self.env['employee.data'].search([('email_employee','=',self.env.user.login)], limit=1)
         return data
  
-    user_fields = fields.Many2one('employee.data',string='Employee Data' ,default=get_current_user)
+    def write(self, values):
+        if (self.user_local_time < self.questionare_start_time_fields) and (self.curent_user_admin == False):
+            raise ValidationError("You Are Not in Time to Fill The Questionare.")
+        elif (self.user_local_time > self.questionare_end_time_fields) and (self.curent_user_admin == False):
+            raise ValidationError("You Late to Fill The Questioner This Days.")
+        return super(CrmQuestionareUser, self).write(values)
+
+    user_fields = fields.Many2one('employee.data',string='Employee Data')
     email_employee = fields.Char(related="user_fields.email_employee")
     questionare_log = fields.Many2one('crm.log')
     questionare_name_fields = fields.Char(string="Questionare Name")
     temporary_location_selection_fields = fields.Selection(site_list,string="Sites Selection",default="Haus Office Meruya")
     list_questions_fields = fields.One2many('crm.questions.user','questionare_id')
     date_of_downloaded =  fields.Date(string="Date Of Downloaded")
+    questionare_start_time_fields = fields.Float(string="Start Time")
+    questionare_end_time_fields = fields.Float(string="End Time")
+    user_local_time = fields.Float(compute='_compute_user_local_time', store=False)
+    status = fields.Selection([('assigned','Assigned'),
+    ('submitted','Submitted')],
+    string="Status Of Your Questionare",default='assigned')
+    curent_user_admin = fields.Boolean(string='is admin? ',compute='is_admin_login')
+    
+    @api.depends('questionare_start_time_fields')
+    def _compute_user_local_time(self):
+        user_timezone = self.env.user.tz or 'UTC'
+        user_datetime = datetime.now(pytz.timezone(user_timezone)).time()
+        print('start TIme',self.questionare_start_time_fields)
+        print('end TIme',self.questionare_end_time_fields)
+        times_final = user_datetime.hour * 3600 + user_datetime.minute * 60 + user_datetime.second
+        print(times_final)
+        self.user_local_time = times_final 
 
+    @api.depends('curent_user_admin')
+    def is_admin_login(self):
+        if self.env.user.has_group('dev_crm_haus.group_crm_questioner_admin'):
+            self.curent_user_admin = True
+        else:
+            self.curent_user_admin = False
 
     def list_data_user_questioner(self):
         return{

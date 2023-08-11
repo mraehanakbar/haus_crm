@@ -13,23 +13,37 @@
                     <group>
                         <group>
                             <field name="questionare_name_fields" string="Questionare Name" attrs="{'readonly':[('status','=','submitted')]}"/>
-                            <field name="list_questions_fields" attrs="{'readonly':[('status','=','submitted')]}">
-                                <tree string="List Of Question">
-                                    <field name="question_audit_fields"/>
-                                </tree>
-                            </field>
+                            <field name="questionare_start_time_fields" widget="float_full_time" options="{'round_off': True}" attrs="{'readonly':[('status','=','submitted')],'invisible':[('schedule_type_fields','!=','timestamp')],'required':[('schedule_type_fields','=','timestamp')]}"/>
+                            <field name="questionare_end_time_fields" widget="float_full_time" options="{'round_off': True}" attrs="{'readonly':[('status','=','submitted')],'invisible':[('schedule_type_fields','!=','timestamp')],'required':[('schedule_type_fields','=','timestamp')]}"/>
+                            <field name="timestamp_fields" attrs="{'readonly':[('status','=','submitted')],'invisible':[('schedule_type_fields','!=','timestamp')],'required':[('schedule_type_fields','=','timestamp')]}"/>
                         </group>
                         <group>
+                            <field name="schedule_type_fields"/>
                             <field name="temporary_location_selection_fields" string="Location" attrs="{'readonly':[('status','=','submitted')]}"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Logging Data" name="logging data">
-                            <field name="logging_fields" string = "Logging">
-                                <tree string="Questioner Log">
-                                    <field name="name"/>
-                                    <field name="log_date" string="Date" />
-                                    <field name="location" strin="Location" />
+                        <page string="List Of Participant" name="list of participant">
+                            <field name="questionare_assigned_user" options="{'no_create': True}">
+                                <tree string="Assigned Users" >
+                                    <field name="first_name_employee"/>
+                                    <field name="organization_employee"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="List Of Questions" name="list of questions">
+                            <field name="list_questions_fields">
+                                <tree string="List Of Question" delete="0" edit="0">
+                                    <field name="question_audit_fields"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string='Scheduled Date' name='scheduled date' attrs="{'invisible':[('schedule_type_fields','!=','date')]}">
+                            <field name='date_schedule_fields'>
+                                <tree string='Scheduled Date'>
+                                    <field name="date_fields"/>
+                                    <field name="questionare_start_time_fields"  widget="float_full_time" options="{'round_off': True}"/>
+                                    <field name="questionare_end_time_fields"  widget="float_full_time" options="{'round_off': True}"/>
                                 </tree>
                             </field>
                         </page>
@@ -56,15 +70,58 @@
             <field name="name">crm.questions.admin.form</field>
             <field name="model">crm.questions.admin</field>
             <field name="arch" type="xml">
-                <form>
+                <form edit="0">
                     <sheet>
                         <group> 
-                            <field name="question_audit_fields"/>
+                            <group>
+                                <field name="status" invisible="1"/>
+                                <field name="question_audit_fields" attrs="{'readonly':[('status','=','submitted')]}"/>
+                                <field name="questions_type_fields" attrs="{'readonly':[('status','=','submitted')]}"/>
+                            </group>
+                            <group>
+                                <field name="questions_selection_choice" attrs="{'invisible':[('questions_type_fields','!=','pilihan_ganda')],
+                                'readonly':[('status','=','submitted')]}">
+                                    <tree string="Answers">
+                                        <field name="answers_selections"/>
+                                    </tree>
+                                </field>
+                            </group>
                         </group>
                     </sheet>
                 </form>
             </field>
     </record>
+
+    <record id="view_questions_multiple_answers_form" model="ir.ui.view">
+            <field name="name">crm.selections.answers.form</field>
+            <field name="model">crm.selections.answers</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group> 
+                            <field name="answers_selections"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+    </record>
+
+    <record id="view_questionare_schedule_date_form" model="ir.ui.view">
+        <field name="name">crm.date.schedule.form</field>
+        <field name="model">crm.date.schedule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group> 
+                        <field name="date_fields"/>
+                        <field name="questionare_start_time_fields"  widget="float_full_time" options="{'round_off': True}"/>
+                        <field name="questionare_end_time_fields"  widget="float_full_time" options="{'round_off': True}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
 
 
     <record id="action_questionare_admin" model="ir.actions.act_window">

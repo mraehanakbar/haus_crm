@@ -23,7 +23,31 @@
                 <sheet>
                     <group>
                         <field name="assigned_employee"/>
-                        <field name="department"/>
+                        <field name="assigned_email" force_save="1" invisible="1"/>
+                        <field name="assigned_name" force_save="1" invisible="1"/>
+                        <field name="department" force_save="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_crm_activity_checkin_form" model="ir.ui.view">
+        <field name="name">crm.activity.checkin.form</field>
+        <field name="model">crm.activity.checkin</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="current_assigned_user_login" invisible="1"/>
+                        <group>
+                            <field name="involved_employee" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                            <field name="involved_employee_desc" attrs="{'readonly':[('current_assigned_user_login','=',False)]}"/>
+                        </group>
+                        <group>
+                            <field name="involved_employee_attachments" attrs="{'readonly':[('current_assigned_user_login','=',False)]}"/>
+                            <field name="involved_employee_status" attrs="{'readonly':[('current_assigned_user_login','=',False)]}"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
@@ -38,33 +62,45 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <field name="current_user_reporter" invisible="1"/>
-                    <button id="solved_issue" name="solved_issue"  string="Solved" attrs="{'invisible':[('current_user_reporter','=',True)]}" type="object"/>
-                    <button id="not_solved_issue" name="not_solved_issue"  attrs="{'invisible':[('current_user_reporter','=',True)]}" string="Not Solved" type="object"/>
+                    <field name="check_is_reporter_login" invisible="1"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="reporter_name" string="Reporter Name"></field>
+                            <field name="reporter_email" force_save="1"></field>
                             <field name="department_reporter" string="Department Reporter"></field>
-                            <field name="issue_due_date" attrs="{'readonly':[('current_user_reporter','=',True)]}" string="Due Date"></field>
-                            <field name="priority" attrs="{'readonly':[('current_user_reporter','=',True)]}" string="Priority"></field>
+                            <field name="issue_due_date" attrs="{'readonly':[('check_is_reporter_login','=',False)]}" string="Due Date"></field>
+                            <field name="priority" attrs="{'readonly':[('check_is_reporter_login','=',False)]}" string="Priority"></field>
                             <field name="state" string="Status"></field>
-                        </group>
-                        <group>
                             <field name="assigned_employee">
                                 <tree string="Assigned Employee">
                                     <field name="assigned_employee"/>
                                     <field name="department"/>
                                 </tree>
                             </field>
-                            <field name="temporary_location_selection" attrs="{'readonly':[('current_user_reporter','=',True)]}"></field>
-                            <field name="issue_problem" string="Issues" attrs="{'readonly':[('current_user_reporter','=',True)]}" />
-                            <field name="issue_category" string="Category" attrs="{'readonly':[('current_user_reporter','=',True)]}" />
-                            <field name="issue_comment" string="Comment" attrs="{'readonly':[('current_user_reporter','=',False)]}" />
-                            <field name="issue_attachment" string="Attachment" attrs="{'readonly':[('current_user_reporter','=',True)]}" />
+                        </group>
+                        <group>
+                            <field name="temporary_location_selection" attrs="{'readonly':[('check_is_reporter_login','=',False)]}"></field>
+                            <field name="issue_problem" string="Issues" attrs="{'readonly':[('check_is_reporter_login','=',False)]}" />
+                            <field name="issue_category" string="Category" attrs="{'readonly':[('check_is_reporter_login','=',False)]}" options="{'no_open': True}" />
+                            <field name="issue_attachment" string="Attachment" attrs="{'readonly':[('check_is_reporter_login','=',False)]}" />
+                            <field name="detail_of_issue" string="Details Of Issue" attrs="{'readonly':[('check_is_reporter_login','=',False)]}"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Issue Check-In" name="issue_check_in">
+                            <group>
+                                <field name="issue_checkin">
+                                    <tree string="Issue Check-In" delete="false">
+                                        <field name="involved_employee" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
+                                        <field name="involved_employee_status"/>
+                                        <field name="involved_employee_desc"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

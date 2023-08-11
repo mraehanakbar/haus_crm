@@ -318,8 +318,10 @@ class download_questionare(models.TransientModel):
     def download_the_questionare(self):
         full_data = self.env['crm.questionare.admin'].search([])
         search_questions = self.env['crm.questions.admin'].search([])
+        search_selections = self.env['crm.selections.admin'].search([])
 
         dict_data = {}
+        dict_data_selections = {}
 
         for i in range(len(full_data.mapped('questionare_name_fields'))):
             current_data = full_data.mapped(
@@ -336,6 +338,8 @@ class download_questionare(models.TransientModel):
                                                                           i]), ('temporary_location_selection_fields', '=', full_data.mapped('temporary_location_selection_fields')[i]),
                                                                          ('email_employee', '=', self.env.user.login)])
 
+                
+
                 if search_data_2_count == 0:
                     self.env['crm.questionare.user'].sudo().create({
                         'questionare_name_fields': full_data.mapped('questionare_name_fields')[i],
@@ -343,7 +347,7 @@ class download_questionare(models.TransientModel):
                         'date_of_downloaded': self.downloaded_date
                     })
 
-                    # Make record in model log
+                    """
                     self.env['crm.log'].sudo().create({
                         'name': self.env.user.name,
                         'email':self.env.user.login,
@@ -351,7 +355,7 @@ class download_questionare(models.TransientModel):
                         'log_date':self.downloaded_date,
                         'questioner':full_data.mapped('questionare_name_fields')[i],
                     })
-
+                    """
                     def my_filtering_function_content(pair):
                         key, value = pair
                         if value[2]['questionare_name'] == full_data.mapped('questionare_name_fields')[i]:
@@ -360,15 +364,50 @@ class download_questionare(models.TransientModel):
                             return False
 
                     for x in range(len(search_questions.mapped('question_audit_fields'))):
-                        dict_data[search_questions.mapped('question_audit_fields')[x]] = (0, 0, {
-                            'questionare_id': int(search_data_2),
-                            'questionare_name': str(search_questions.mapped('questionare_name')[x]),
-                            'question_audit_fields': str(search_questions.mapped('question_audit_fields')[x]),
-                        })
+                        search_data_questions = self.env['crm.questions.user'].search([('question_audit_fields', '=', search_questions.mapped('question_audit_fields')[x]),
+                        ('question_user', '=', self.env.user.login)],limit=1)
+                        if search_questions.mapped('questions_type_fields')[x] == 'pilihan_ganda':
+                            def my_filtering_function_content_questions(pair):
+                                key, value = pair
+                                if value[2]['questions_name'] == search_questions.mapped('question_audit_fields')[x]:
+                                    return True
+                                else:
+                                    return False
+                            for quest in range(len(search_selections)):
+                                search_selection_results = self.env['crm.selections.user'].search_count([('questions_name','=',search_selections.mapped('questions_name')[quest]),('answers_selections','=',search_selections.mapped('answers_selections')[quest])])
+                                dict_data_selections[search_selections.mapped('answers_selections')[quest]] = (0,0,{
+                                    'questions_id':int(search_data_questions),
+                                    'questions_name':str(search_selections.mapped('questions_name')[quest]),
+                                    'answers_selections':str(search_selections.mapped('answers_selections')[quest]),
+                                })
 
-                    filtered_grades = dict(
-                        filter(my_filtering_function_content, dict_data.items()))
-                    print(filtered_grades)
+                            filtered_values = dict(filter(my_filtering_function_content_questions,dict_data_selections.items()))
+                            if search_selection_results < 1:
+                                dict_data[search_questions.mapped('question_audit_fields')[x]] = (0, 0, {
+                                'questionare_id': int(search_data_2),
+                                'questionare_name': str(search_questions.mapped('questionare_name')[x]),
+                                'question_audit_fields': str(search_questions.mapped('question_audit_fields')[x]),
+                                'questions_type_fields': search_questions.mapped('questions_type_fields')[x],
+                                'questions_selection_choice':list(filtered_values.values())
+                            })
+
+                            else:
+                                dict_data[search_questions.mapped('question_audit_fields')[x]] = (0, 0, {
+                                'questionare_id': int(search_data_2),
+                                'questionare_name': str(search_questions.mapped('questionare_name')[x]),
+                                'question_audit_fields': str(search_questions.mapped('question_audit_fields')[x]),
+                                'questions_type_fields': search_questions.mapped('questions_type_fields')[x],
+                                
+                            })
+
+                        else:
+                            dict_data[search_questions.mapped('question_audit_fields')[x]] = (0, 0, {
+                                'questionare_id': int(search_data_2),
+                                'questionare_name': str(search_questions.mapped('questionare_name')[x]),
+                                'question_audit_fields': str(search_questions.mapped('question_audit_fields')[x]),
+                            })
+
+                    filtered_grades = dict(filter(my_filtering_function_content, dict_data.items()))
                     search_data_3 = self.env['crm.questionare.user'].search(
                         [('questionare_name_fields', '=', full_data.mapped('questionare_name_fields')[i]),('email_employee', '=', self.env.user.login)])
                     search_data_3.sudo().write({
