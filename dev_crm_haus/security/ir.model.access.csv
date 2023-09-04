@@ -5,9 +5,9 @@ access_crm_questionare_admin,access.crm.questionare.admin,model_crm_questionare_
 access_crm_questions_admin,access.crm.questions.admin,model_crm_questions_admin,,1,1,1,1
 access_crm_questionare_user,access.crm.questionare.user,model_crm_questionare_user,,1,1,1,1
 access_crm_questions_user,access.crm.questions.user,model_crm_questions_user,,1,1,1,1
-access_download_questionare,access.download.questionare,model_download_questionare,,1,1,1,1
 access_crm_log,access.crm.log,model_crm_log,,1,1,1,1
-access_crm_group_assigned_issue,access.crm.group.assigned.issue,model_crm_group_assigned_issue,,1,1,1,1
 access_crm_activity_checkin,access.crm.activity.checkin,model_crm_activity_checkin,,1,1,1,1
 access_crm_selections_answers,access.crm.selections.answers,model_crm_selections_answers,,1,1,1,1
 access_crm_date_schedule,access.crm.date.schedule,model_crm_date_schedule,,1,1,1,1
+access_download_report_questionare,access.download.report.questionare,model_download_report_questionare,,1,1,1,1
+access_download_report_questionare_missed,access.download.report.questionare.missed,model_download_report_questionare_missed,,1,1,1,1

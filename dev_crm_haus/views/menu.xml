@@ -48,12 +48,37 @@
         sequence="3"
     />
 
+
+
+    <menuitem
+        id="crm_reporting_master"
+        name="Reporting"
+        parent="crm_root"
+        sequence="5"
+    />
+
+    <menuitem
+        id="crm_questionare_download_master"
+        name="Questionare Download Completed"
+        parent="crm_reporting_master"
+        action="action_download_report_questionare"
+        sequence="1"
+    />
+
+    <menuitem
+        id="crm_questionare_download_master_missed"
+        name="Questionare Download Missed"
+        parent="crm_reporting_master"
+        action="action_download_report_missed_questionare"
+        sequence="2"
+    />
+
     <menuitem
         id="crm_questionare_master_user"
         name="Questionare"
         parent="crm_root"
         action="action_list_user_questioner"
-        sequence="4"
+        sequence="5"
     />
 
 </odoo>

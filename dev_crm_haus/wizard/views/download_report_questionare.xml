@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="download_report_quistioner_form" model="ir.ui.view">
+        <field name="name">download.report.questionare.form</field>
+        <field name="model">download.report.questionare</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="list_questionare_fields"/>
+                        <field name="temporary_location_selection_fields"/>
+                        <field name="organization_employee"/>
+                        <field name="name_assigned_user_fields"/>
+                    </group>
+
+                    <group>
+                        <field name="start_date_created_date_fields"/>
+                        <field name="end_date_created_date_fields"/>
+                        <field name="start_date_submited_date_fields"/>
+                        <field name="end_date_submited_date_fields"/>
+                    </group>
+                </group>
+                <footer>
+                    <button id="download_questionare_report_complete" name="download_csv_file_completed_report"  string="Download" type="object" 
+                        class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="download_report_quistioner_missed_form" model="ir.ui.view">
+        <field name="name">download.report.questionare.missed.form</field>
+        <field name="model">download.report.questionare.missed</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="list_questionare_fields"/>
+                        <field name="temporary_location_selection_fields"/>
+                        <field name="organization_employee"/>
+                        <field name="name_assigned_user_fields"/>
+                    </group>
+
+                    <group>
+                        <field name="start_date_created_date_fields"/>
+                        <field name="end_date_created_date_fields"/>
+                    </group>
+                </group>
+                <footer>
+                    <button id="download_questionare_report_missed_complete" name="download_csv_file_missed_report"  string="Download" type="object" 
+                        class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_download_report_questionare" model="ir.actions.act_window">
+        <field name="name">Download Form Questionare</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">download.report.questionare</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="action_download_report_missed_questionare" model="ir.actions.act_window">
+        <field name="name">Download Form Questionare Missed</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">download.report.questionare.missed</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

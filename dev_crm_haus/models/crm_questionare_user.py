@@ -251,27 +251,93 @@ class CrmQuestionareUser(models.Model):
         return data
  
     def write(self, values):
-        if (self.user_local_time < self.questionare_start_time_fields) and (self.curent_user_admin == False):
-            raise ValidationError("You Are Not in Time to Fill The Questionare.")
+        try:
+            values['number_of_not_answered_fields']
+        except:
+            values['number_of_not_answered_fields'] = self.number_of_not_answered_fields
+
+        try:
+            values['number_of_not_answered_fields']
+            
+        except:
+            values['number_of_not_answered_fields'] = self.number_of_not_answered_fields
+
+        try:
+            values['evidence_fields']
+        except:
+            values['evidence_fields'] = self.evidence_fields
+            
+        if (values['number_of_not_answered_fields'] > 0) and (self.status == 'started' ) and ((self.number_of_answered_fields > 0) or (values['number_of_answered_fields'] > 0) ):
+            raise ValidationError("There Is Question yo Havent Answers Yet")
+
         elif (self.user_local_time > self.questionare_end_time_fields) and (self.curent_user_admin == False):
-            raise ValidationError("You Late to Fill The Questioner This Days.")
+            #raise ValidationError("You Late to Fill The Questioner This Days.")
+            values['check_out_time_fields'] = self.user_local_time
+            values['submitted_date'] = ''
+            values['status'] = 'missed_reports'
+
+        elif (self.user_local_time <= self.questionare_end_time_fields) and (values['number_of_not_answered_fields'] == 0) and (self.status == 'started') :
+            user_timezone = self.env.user.tz or 'UTC'
+            user_datetime = datetime.now(pytz.timezone(user_timezone))
+            if not values['evidence_fields']:
+                raise ValidationError("Tolong Sertakan Bukti Foto Diri")
+            values['check_out_time_fields'] = self.user_local_time
+            values['submitted_date'] = user_datetime
+            values['status'] ='completed_reports'
+
+        elif self.status == 'started':
+            pass
+
         return super(CrmQuestionareUser, self).write(values)
 
     user_fields = fields.Many2one('employee.data',string='Employee Data')
     email_employee = fields.Char(related="user_fields.email_employee")
+    user_departement = fields.Selection(related="user_fields.organization_employee")
     questionare_log = fields.Many2one('crm.log')
     questionare_name_fields = fields.Char(string="Questionare Name")
     temporary_location_selection_fields = fields.Selection(site_list,string="Sites Selection",default="Haus Office Meruya")
     list_questions_fields = fields.One2many('crm.questions.user','questionare_id')
-    date_of_downloaded =  fields.Date(string="Date Of Downloaded")
+    date_of_downloaded =  fields.Date(string="Scheduled Date")
     questionare_start_time_fields = fields.Float(string="Start Time")
     questionare_end_time_fields = fields.Float(string="End Time")
     user_local_time = fields.Float(compute='_compute_user_local_time', store=False)
     status = fields.Selection([('assigned','Assigned'),
-    ('submitted','Submitted')],
-    string="Status Of Your Questionare",default='assigned')
+    ('started','Started'),
+    ('completed_reports','Completed Reports'),
+    ('missed_reports','Missed Reports'),
+    ],string="Status",default='assigned')
     curent_user_admin = fields.Boolean(string='is admin? ',compute='is_admin_login')
-    
+    number_of_answered_fields = fields.Integer(string="Number Of Answered",compute="_compute_answered")
+    number_of_not_answered_fields = fields.Integer(string="Number Of Not Answered",compute="_compute_answered")
+    submitted_date = fields.Date(string="Submission Date")
+    check_in_time_fields = fields.Float(string="Waktu Checkin")
+    check_out_time_fields = fields.Float(string="Waktu Checkout",readonly=True)
+    evidence_fields = fields.Binary("Evidence", attachment=True)
+    questionare_category_fields = fields.Char(string="Category")
+    @api.depends('list_questions_fields')
+    def _compute_answered(self):
+        answered = 0
+        not_answered = 0
+        for data in self.list_questions_fields:
+            if data.questions_type_fields == 'text':
+                if data.answer_audit_fields:
+                    answered+=1
+                else:
+                    not_answered += 1
+            
+            elif data.questions_type_fields == 'true_false':
+                if data.questions_yes_no_choice_fields:
+                    answered+=1
+                else:
+                    not_answered += 1
+            else:
+                if data.questions_selection_choice:
+                    answered+=1
+                else:
+                    not_answered += 1
+        self.number_of_answered_fields = answered
+        self.number_of_not_answered_fields = not_answered
+
     @api.depends('questionare_start_time_fields')
     def _compute_user_local_time(self):
         user_timezone = self.env.user.tz or 'UTC'
@@ -280,7 +346,7 @@ class CrmQuestionareUser(models.Model):
         print('end TIme',self.questionare_end_time_fields)
         times_final = user_datetime.hour * 3600 + user_datetime.minute * 60 + user_datetime.second
         print(times_final)
-        self.user_local_time = times_final 
+        self.user_local_time = times_final
 
     @api.depends('curent_user_admin')
     def is_admin_login(self):
@@ -297,9 +363,21 @@ class CrmQuestionareUser(models.Model):
             "res_model" : self._name,
             "view_mode": "tree,form", 
             "domain": [('email_employee', '=', self.env.user.login)],
-            "context":{'create': False, 'delete': False},
+            "context":{'create': False, 'delete': True},
         }
 
+    def check_in_times(self):
+        if (self.user_local_time < self.questionare_start_time_fields) and (self.curent_user_admin == False):
+            raise ValidationError("You Are Not in Time to Fill The Questionare.")
+        user_timezone = self.env.user.tz or 'UTC'
+        user_datetime = datetime.now(pytz.timezone(user_timezone)).time()
+        print('start TIme',self.questionare_start_time_fields)
+        print('end TIme',self.questionare_end_time_fields)
+        times_final = user_datetime.hour * 3600 + user_datetime.minute * 60 + user_datetime.second
+        print(times_final)
 
+        self.check_in_time_fields = times_final
+        print(self.check_in_time_fields)
+        self.status = 'started'
     
  

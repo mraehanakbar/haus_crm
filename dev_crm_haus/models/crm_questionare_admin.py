@@ -1,9 +1,11 @@
 from email.policy import default
 from odoo import api, fields, models, _
-from datetime import datetime
+from datetime import datetime, timedelta
 from odoo.exceptions import ValidationError
 import csv
 import base64
+from pytz import timezone 
+from lxml import etree
 
 site_list = [('HAUS! JKT - BINUS 1', 'HAUS! BINUS 1'),
     ('HAUS! DPK - GUNADARMA', 'HAUS! DEPOK'),
@@ -241,12 +243,21 @@ site_list = [('HAUS! JKT - BINUS 1', 'HAUS! BINUS 1'),
     ('Haus Office Meruya', 'Haus Office Meruya'),
     ('Haus Office Sastra Graha', 'Haus Office Sastra Graha'),]
 
+def float_to_formatted_time(float_hours):
+    hours = int(float_hours // 3600)
+    minutes = int((float_hours % 3600) // 60)
+    seconds = int(float_hours % 60)
+    formatted_time = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+    return formatted_time.split(":")
 
 class CrmQuestionareAdmin(models.Model):
     _name = "crm.questionare.admin"
     _inherit = ["mail.thread","mail.activity.mixin"]
     _description = "CRM Questionare Form"
     _rec_name = "questionare_name_fields"
+
+
+
 
     @api.model
     def create(self,vals):
@@ -313,17 +324,46 @@ class CrmQuestionareAdmin(models.Model):
 
                     })
                     """
-                    self.env['crm.questionare.user'].sudo().create({
-                        'user_fields':int(results[i]),
-                        'email_employee':search_data.mapped('email_employee')[0],
-                        'questionare_name_fields': vals['questionare_name_fields'],
-                        'questionare_start_time_fields':vals['questionare_start_time_fields'],
-                        'questionare_end_time_fields':vals['questionare_end_time_fields'],
-                        'temporary_location_selection_fields': vals['temporary_location_selection_fields'],
-                        'date_of_downloaded':datetime.today(),
-                        'list_questions_fields': list(filtered_grades.values()),
-                        'status':'assigned',
-                    })
+                    if vals['immediate_assign_fields']:
+                        user_timezone = self.env.user.tz or 'UTC'
+                        user_datetime = datetime.now(timezone(user_timezone)).time()
+                        times_final = user_datetime.hour * 3600 + user_datetime.minute * 60 + user_datetime.second
+                        if (vals['questionare_start_time_fields'] <= times_final):
+                            raise ValidationError('Waktu Sudah Lewat Untuk Hari Ini')
+                        self.env['crm.questionare.user'].sudo().create({
+                            'user_fields':int(results[i]),
+                            'email_employee':search_data.mapped('email_employee')[0],
+                            'questionare_name_fields': vals['questionare_name_fields'],
+                            'questionare_start_time_fields':vals['questionare_start_time_fields'],
+                            'questionare_end_time_fields':vals['questionare_end_time_fields'],
+                            'temporary_location_selection_fields': vals['temporary_location_selection_fields'],
+                            'date_of_downloaded':datetime.today(),
+                            'list_questions_fields': list(filtered_grades.values()),
+                            'status':'assigned',
+                            'questionare_category_fields':vals['questionare_category_name']
+                        })
+                        user_dict = {}
+                        date_today = datetime.now()
+                        user_dict['email_employee'] = search_data.mapped('email_employee')[0]
+                        user_dict['questionare_name'] = vals['questionare_name_fields']
+                        user_dict['temporary_location_selection_fields'] = vals['temporary_location_selection_fields']
+                        
+                        model_ref = 'dev_crm_haus.model_crm_questionare_admin'
+                        model = self.env.ref(model_ref, raise_if_not_found=False)
+                        ScheduledAction = self.env['ir.cron']
+                        converted_hours,converted_minutes,converted_sec = float_to_formatted_time(vals['questionare_end_time_fields'])[0],float_to_formatted_time(vals['questionare_end_time_fields'])[1],float_to_formatted_time(vals['questionare_end_time_fields'])[2]
+                        next_execution_date = date_today.replace(hour=abs(int(int(converted_hours)-7)),minute=int(converted_minutes)+10,second=int(converted_sec))
+                        action = ScheduledAction.create({
+                            'name': '{} Auto Formatted Action {} Sites {} Date {}'.format(search_data.mapped('email_employee')[0],user_dict['questionare_name'],user_dict['temporary_location_selection_fields'],next_execution_date),
+                            'model_id': model.id,
+                            'state': 'code',
+                            'code': 'model.auto_missed_function(dict_var={})'.format(user_dict),
+                            'interval_number': 1,  # Set the interval number (e.g., 1 for daily)
+                            'nextcall': next_execution_date.strftime('%Y-%m-%d %H:%M:%S'),
+                            'interval_type': 'minutes',  # Set the interval type (e.g., days, weeks, months, etc.)
+                            'numbercall': 1,  # Set to -1 to run indefinitely or set a specific number for limited runs
+                            'active': True,  # Set to True to activate the scheduled action
+                        })
 
             model_ref = 'dev_crm_haus.model_crm_questionare_admin'
             model = self.env.ref(model_ref, raise_if_not_found=False)
@@ -332,16 +372,20 @@ class CrmQuestionareAdmin(models.Model):
             'list_question':list(filtered_grades.values()),
             'date_downloaded':datetime.today(),
             'temporary_location_selection_fields':vals['temporary_location_selection_fields'],
+            'time_schedule': [ vals['questionare_start_time_fields'],vals['questionare_end_time_fields'] ],
+            'questionare_category_fields':vals['questionare_category_name'],
             }
-
+            date_tomorrow = datetime.now() + timedelta(1)
+            print("Passed")
             if (model) and (vals['timestamp_fields'] == '1_day') :
                 # Create the scheduled action record
                 ScheduledAction = self.env['ir.cron']
                 action = ScheduledAction.create({
-                    'name': 'My Scheduled Action {}'.format(vals['questionare_name_fields']),
+                    'name': 'My Scheduled Action {} sites {}'.format(vals['questionare_name_fields'],vals['temporary_location_selection_fields']),
                     'model_id': model.id,
                     'state': 'code',
                     'code': 'model.my_scheduled_function(dict_var={})'.format(scheduled_action),
+                    'nextcall': date_tomorrow.strftime('%Y-%m-%d %H:%M:%S'),
                     'interval_number': 1,  # Set the interval number (e.g., 1 for daily)
                     'interval_type': 'days',  # Set the interval type (e.g., days, weeks, months, etc.)
                     'numbercall': -1,  # Set to -1 to run indefinitely or set a specific number for limited runs
@@ -356,9 +400,10 @@ class CrmQuestionareAdmin(models.Model):
                 # Create the scheduled action record
                 ScheduledAction = self.env['ir.cron']
                 action = ScheduledAction.create({
-                    'name': 'My Scheduled Action {}'.format(vals['questionare_name_fields']),
+                    'name': 'My Scheduled Action {} sites {}'.format(vals['questionare_name_fields'],vals['temporary_location_selection_fields']),
                     'model_id': model.id,
                     'state': 'code',
+                    'nextcall': date_tomorrow.strftime('%Y-%m-%d %H:%M:%S'),
                     'code': 'model.my_scheduled_function(dict_var={})'.format(scheduled_action),
                     'interval_number': 1,  # Set the interval number (e.g., 1 for daily)
                     'interval_type': 'weeks',  # Set the interval type (e.g., days, weeks, months, etc.)
@@ -374,9 +419,10 @@ class CrmQuestionareAdmin(models.Model):
                 # Create the scheduled action record
                 ScheduledAction = self.env['ir.cron']
                 action = ScheduledAction.create({
-                    'name': 'My Scheduled Action {}'.format(vals['questionare_name_fields']),
+                    'name': 'My Scheduled Action {} sites {}'.format(vals['questionare_name_fields'],vals['temporary_location_selection_fields']),
                     'model_id': model.id,
                     'state': 'code',
+                    'nextcall': date_tomorrow.strftime('%Y-%m-%d %H:%M:%S'),
                     'code': 'model.my_scheduled_function(dict_var={})'.format(scheduled_action),
                     'interval_number': 1,  # Set the interval number (e.g., 1 for daily)
                     'interval_type': 'months',  # Set the interval type (e.g., days, weeks, months, etc.)
@@ -392,9 +438,10 @@ class CrmQuestionareAdmin(models.Model):
                 # Create the scheduled action record
                 ScheduledAction = self.env['ir.cron']
                 action = ScheduledAction.create({
-                    'name': 'My Scheduled Action {}'.format(vals['questionare_name_fields']),
+                    'name': 'My Scheduled Action {} sites {}'.format(vals['questionare_name_fields'],vals['temporary_location_selection_fields']),
                     'model_id': model.id,
                     'state': 'code',
+                    'nextcall': date_tomorrow.strftime('%Y-%m-%d %H:%M:%S'),
                     'code': 'model.my_scheduled_function(dict_var={})'.format(scheduled_action),
                     'interval_number': 12,  # Set the interval number (e.g., 1 for daily)
                     'interval_type': 'months',  # Set the interval type (e.g., days, weeks, months, etc.)
@@ -407,17 +454,77 @@ class CrmQuestionareAdmin(models.Model):
                 print("Model not found or not installed.")
 
         elif vals['schedule_type_fields'] == 'date':
-            date_results = vals['date_schedule_fields'][0][2]
-            print(date_results)
+            vals['status'] = 'submitted'
+            if len(vals['date_schedule_fields'][0][2]) < 1:
+                raise ValidationError("Harap Tentukan Tanggal Assign Anda")
+            dict_data = {}
+            results = vals['questionare_assigned_user'][0][2]
+            date_results = vals['date_schedule_fields']
+
+            for i in range(len(date_results)):
+                results = vals['questionare_assigned_user'][0][2]
+                print("Date : {}, Start Time {}, End Time: {}".format(date_results[i][2]['date_fields'],
+                date_results[i][2]['questionare_start_time_fields'],date_results[i][2]['questionare_end_time_fields']))
+
+                for i in range(len(results)):
+                    search_data = self.env['employee.data'].search([('id','=',results[i])])
+                    email_data = search_data.mapped('email_employee')[0]
+                    search_data_2 = self.env['crm.questionare.user'].search([('questionare_name_fields', '=', vals['questionare_name_fields']),
+                    ('temporary_location_selection_fields', '=', vals['temporary_location_selection_fields']),('date_of_downloaded', '=', datetime.today()),
+                    ('email_employee', '=', search_data.mapped('email_employee')[0])])
+
+                    def my_filtering_function_content(pair):
+                        key, value = pair
+                        if value[2]['questionare_name'] == vals['questionare_name_fields']:
+                            return True
+                        else:
+                            return False
+                    
+                    for x in range(len(vals['list_questions_fields'])):                        
+                        dict_data[vals['list_questions_fields'][x][2]['question_audit_fields']] = (0, 0, {
+                            'questionare_id': int(search_data_2),
+                            'questionare_name': str(vals['questionare_name_fields']),
+                            'question_audit_fields': str(vals['list_questions_fields'][x][2]['question_audit_fields']),
+                            'questions_type_fields': vals['list_questions_fields'][x][2]['questions_type_fields']
+                        })
+                    filtered_grades = dict(filter(my_filtering_function_content, dict_data.items()))
+                print([date_results[i][2]['questionare_start_time_fields'],date_results[i][2]['questionare_end_time_fields']])
+                model_ref = 'dev_crm_haus.model_crm_questionare_admin'
+                model = self.env.ref(model_ref, raise_if_not_found=False)  
+                scheduled_action = {'list_user':results,
+                'questionare_name': vals['questionare_name_fields'],
+                'list_question':list(filtered_grades.values()),
+                'date_downloaded':date_results[i][2]['date_fields'],
+                'temporary_location_selection_fields':vals['temporary_location_selection_fields'],
+                'time_schedule': [date_results[i][2]['questionare_start_time_fields'],date_results[i][2]['questionare_end_time_fields']],
+                }
+                ScheduledAction = self.env['ir.cron']
+
+                action = ScheduledAction.create({
+                    'name': 'My Scheduled Action {} sites {}'.format(vals['questionare_name_fields'],vals['temporary_location_selection_fields']),
+                    'model_id': model.id,
+                    'state': 'code',
+                    'interval_number': 1,  # Set the interval number (e.g., 1 for daily)
+                    'interval_type': 'minutes',
+                    'code': 'model.my_scheduled_function(dict_var={})'.format(scheduled_action),
+                    'nextcall': date_results[i][2]['date_fields'] , #date_results[i][2]['date_fields'] + " 11:30:00"
+                    'numbercall': 1,  # Set to -1 to run indefinitely or set a specific number for limited runs
+                    'active': True,  # Set to True to activate the scheduled action
+                })
 
         rec = super(CrmQuestionareAdmin, self).create(vals)
         return rec
 
     def unlink(self):
         for rec in self:
-            self.env['crm.questionare.user'].search([('questionare_name_fields', '=', rec.questionare_name_fields)]).sudo().unlink()
-            self.env['ir.cron'].search([('name','=','My Scheduled Action {}'.format(rec.questionare_name_fields))]).sudo().unlink()
-
+            crm_questionare_user_records = self.env['crm.questionare.user'].search([('questionare_name_fields', '=', rec.questionare_name_fields)])
+            if crm_questionare_user_records:
+                crm_questionare_user_records.sudo().unlink()
+            search_pattern = "My Scheduled Action {} sites {}".format(rec.questionare_name_fields, rec.temporary_location_selection_fields)
+            print(search_pattern)
+            cron_records = self.env['ir.cron'].search([('name', '=', search_pattern)])
+            if cron_records:
+                cron_records.sudo().unlink()
         return super(CrmQuestionareAdmin, self).unlink()
 
     def write(self,vals):
@@ -433,7 +540,7 @@ class CrmQuestionareAdmin(models.Model):
                     full_data = self.env['crm.questionare.admin'].search([])
                     search_questions = self.env['crm.questions.admin'].search([])
                     dict_data = {}
-                        
+                    
                     search_data_2_count = self.env['crm.questionare.user'].search_count([('questionare_name_fields', '=', self.questionare_name_fields),
                                                                                         ('temporary_location_selection_fields', '=', self.temporary_location_selection_fields), ('temporary_location_selection_fields', '=', self.temporary_location_selection_fields),
                                                                                         ('email_employee', '=', search_data.mapped('email_employee')[0])])
@@ -450,6 +557,8 @@ class CrmQuestionareAdmin(models.Model):
                             'questionare_end_time_fields':self.questionare_end_time_fields,
                             'questionare_name_fields': self.questionare_name_fields,
                             'temporary_location_selection_fields': self.temporary_location_selection_fields,
+                            'questionare_category_fields':self.questionare_category_name
+                            
                         })
 
                         def my_filtering_function_content(pair):
@@ -518,13 +627,17 @@ class CrmQuestionareAdmin(models.Model):
                 for data in updated_list:
                     search_data = self.env['employee.data'].search([('email_employee','=',data)])
                     reversed_list.append(search_data.mapped('id')[0])
+                
                 scheduled_action = {'list_user':reversed_list,
                 'questionare_name': self.questionare_name_fields,
                 'list_question':list(filtered_grades.values()),
                 'date_downloaded':datetime.today(),
                 'temporary_location_selection_fields':self.temporary_location_selection_fields,
+                'time_schedule': [self.questionare_start_time_fields,self.questionare_end_time_fields],
+                'questionare_category_fields':self.questionare_category_fields
                 }
-                cron_search = self.env['ir.cron'].search([('name','=','My Scheduled Action {}'.format(self.questionare_name_fields))])
+
+                cron_search = self.env['ir.cron'].search([('name','=','My Scheduled Action {} sites {}'.format(self.questionare_name_fields,self.temporary_location_selection_fields))])
                 cron_search.sudo().write({
                     'code': 'model.my_scheduled_function(dict_var={})'.format(scheduled_action),
                 })
@@ -540,6 +653,7 @@ class CrmQuestionareAdmin(models.Model):
 
         try:
             if vals['list_questions_fields']:
+                reversed_list = []
                 for name in updated_list:
                     search_data = self.env['employee.data'].search([('email_employee','=',name)])
                 
@@ -572,10 +686,59 @@ class CrmQuestionareAdmin(models.Model):
                     filtered_grades = dict(filter(my_filtering_function_content, dict_data.items()))
                     search_data_3 = self.env['crm.questionare.user'].search(
                         [('questionare_name_fields', '=', self.questionare_name_fields),('email_employee', '=', name)])
-                    search_data_3.sudo().write({
-                        'list_questions_fields': list(filtered_grades.values()),
-                        'status':'assigned',
-                    })
+                print("error")
+                for data in updated_list:
+                    search_data = self.env['employee.data'].search([('email_employee','=',data)])
+                    reversed_list.append(search_data.mapped('id')[0])
+                print("error")
+                for user in reversed_list:
+                    search_data = self.env['employee.data'].search([('id','=',user)])
+                    updated_list.append(search_data.mapped('email_employee')[0])
+                    full_data = self.env['crm.questionare.admin'].search([])
+                    search_questions = self.env['crm.questions.admin'].search([])
+                    dict_data = {}
+                    
+                    search_data_2_count = self.env['crm.questionare.user'].search_count([('questionare_name_fields', '=', self.questionare_name_fields),
+                                                                                        ('temporary_location_selection_fields', '=', self.temporary_location_selection_fields), ('temporary_location_selection_fields', '=', self.temporary_location_selection_fields),
+                                                                                        ('email_employee', '=', search_data.mapped('email_employee')[0])])
+
+                    search_data_2 = self.env['crm.questionare.user'].search([('questionare_name_fields', '=', self.questionare_name_fields),
+                                                                            ('temporary_location_selection_fields', '=', self.temporary_location_selection_fields),
+                                                                            ('email_employee', '=', search_data.mapped('email_employee')[0])])
+                    def my_filtering_function_content(pair):
+                        key, value = pair
+                        if value[2]['questionare_name'] == self.questionare_name_fields:
+                            return True
+                        else:
+                            return False                
+
+                    for x in range(len(self.list_questions_fields.mapped('questionare_name'))):
+                        dict_data[self.list_questions_fields.mapped('question_audit_fields')[x]] = (0, 0, {
+                            'questionare_id': int(search_data_2),
+                            'questionare_name': str(self.list_questions_fields.mapped('questionare_name')[x]),
+                            'question_audit_fields': str(self.list_questions_fields.mapped('question_audit_fields')[x]),
+                            'questions_type_fields': str(self.list_questions_fields.mapped('questions_type_fields')[x])
+                        })
+                    
+                    filtered_grades_2 = dict(filter(my_filtering_function_content, dict_data.items()))
+                    final_data = list(filtered_grades.values())
+                    for x in list(filtered_grades_2.values()):
+                        final_data.append(x)
+
+                scheduled_action = {'list_user':reversed_list,
+                'questionare_name': self.questionare_name_fields,
+                'list_question':final_data,
+                'date_downloaded':datetime.today(),
+                'temporary_location_selection_fields':self.temporary_location_selection_fields,
+                'time_schedule': [self.questionare_start_time_fields,self.questionare_end_time_fields],
+                'questionare_category_fields':self.questionare_category_name
+                }
+
+                cron_search = self.env['ir.cron'].search([('name','=','My Scheduled Action {} sites {}'.format(self.questionare_name_fields,self.temporary_location_selection_fields))])
+                cron_search.sudo().write({
+                    'code': 'model.my_scheduled_function(dict_var={})'.format(scheduled_action),
+                })
+                print("Succcess")
             for data in old_list:
                 if data not in updated_list:
                     search_data = self.env['employee.data'].search([('first_name_employee','=',data)])
@@ -587,7 +750,11 @@ class CrmQuestionareAdmin(models.Model):
         res = super(CrmQuestionareAdmin, self).write(vals)
         return res
 
+
     questionare_name_fields = fields.Char(string="Questionare Name",required=True)
+    immediate_assign_fields = fields.Boolean(string="Immediate Assign ?")
+    questionare_category_fields = fields.Many2one('crm.category',required=True)
+    questionare_category_name = fields.Char(related='questionare_category_fields.name')
     logging_fields = fields.One2many('crm.log','id_questioner',compute='_compute_logging_fields')
     temporary_location_selection_fields = fields.Selection(site_list,string="Sites Selection",default="Haus Office Meruya",required=True)
     list_questions_fields = fields.One2many('crm.questions.admin','questionare_id')
@@ -608,7 +775,7 @@ class CrmQuestionareAdmin(models.Model):
         ('1_month','Every Month'),
         ('1_year','Every Year'),
         ],string="Timestamp")
-    _sql_constraints = [('questionare_name_fields', 'unique (questionare_name_fields)', 'Questionare Dengan Nama Serupa Sudah Ada'),]
+    _sql_constraints = [('questionare_name_fields', 'unique (questionare_name_fields,temporary_location_selection_fields)', 'Questionare Dengan Nama Serupa Sudah Ada'),]
     report_files = fields.Binary(string='Report Data',compute='compute_report_data')
     
     @api.depends('questionare_name_fields')
@@ -677,9 +844,8 @@ class CrmQuestionareAdmin(models.Model):
                 raise ValidationError("Data Partisipan Tidak Boleh Kosong")
 
 
-
     def download_csv_file(self):
-        filename = 'my_file.csv'
+        filename = 'completed_report.csv'
         return {
             'type': 'ir.actions.act_url',
             'url': '/web/binary/download_csv_file?id=%s&filename=%s' % (self.id, filename),
@@ -687,28 +853,113 @@ class CrmQuestionareAdmin(models.Model):
         }
 
     def my_scheduled_function(self,dict_var):
+        def float_to_formatted_time(float_hours):
+            hours = int(float_hours // 3600)
+            minutes = int((float_hours % 3600) // 60)
+            seconds = int(float_hours % 60)
+            formatted_time = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+            return formatted_time.split(":")
+
         for i in range(len(dict_var['list_user'])):
-            search_data = self.env['employee.data'].search([('id','=',dict_var['list_user'][i])])
+            
+            if len(dict_var['time_schedule']) > 0:
+                search_data = self.env['employee.data'].search([('id','=',dict_var['list_user'][i])])
 
 
-            search_data_2_count = self.env['crm.questionare.user'].search_count([('questionare_name_fields', '=', dict_var['questionare_name']),
-                                                                                ('temporary_location_selection_fields', '=', dict_var['temporary_location_selection_fields']), ('date_of_downloaded', '=', datetime.today()),
-                                                                                ('email_employee', '=', search_data.mapped('email_employee')[0])])
+                search_data_2_count = self.env['crm.questionare.user'].search_count([('questionare_name_fields', '=', dict_var['questionare_name']),
+                                                                                    ('temporary_location_selection_fields', '=', dict_var['temporary_location_selection_fields']),
+                                                                                    ('date_of_downloaded', '=', datetime.today())])
 
-            search_data_2 = self.env['crm.questionare.user'].search([('questionare_name_fields', '=', dict_var['questionare_name']),
-                                                                                ('temporary_location_selection_fields', '=', dict_var['temporary_location_selection_fields']), ('date_of_downloaded', '=', datetime.today()),
-                                                                                ('email_employee', '=', search_data.mapped('email_employee')[0])])
+                search_data_2 = self.env['crm.questionare.user'].search([('questionare_name_fields', '=', dict_var['questionare_name']),
+                                                                                    ('temporary_location_selection_fields', '=', dict_var['temporary_location_selection_fields']), ('date_of_downloaded', '=', datetime.today()),
+                                                                                    ('email_employee', '=', search_data.mapped('email_employee')[0])])
+                
+                if search_data_2_count == 0:
+                    self.env['crm.questionare.user'].sudo().create({
+                        'user_fields':int(dict_var['list_user'][i]),
+                        'email_employee':search_data.mapped('email_employee')[0],
+                        'questionare_name_fields': dict_var['questionare_name'],
+                        'temporary_location_selection_fields': dict_var['temporary_location_selection_fields'],
+                        'date_of_downloaded':datetime.today(),
+                        'questionare_start_time_fields':dict_var['time_schedule'][0],
+                        'questionare_end_time_fields':dict_var['time_schedule'][1],
+                        'list_questions_fields': dict_var['list_question'],
+                        'questionare_category_fields':dict_var['questionare_category_fields']
+                    })
 
-            if search_data_2_count == 0:
-                self.env['crm.questionare.user'].sudo().create({
-                    'user_fields':int(dict_var['list_user'][i]),
-                    'email_employee':search_data.mapped('email_employee')[0],
-                    'questionare_name_fields': dict_var['questionare_name'],
-                    'temporary_location_selection_fields': dict_var['temporary_location_selection_fields'],
-                    'date_of_downloaded':datetime.today(),
-                    'list_questions_fields': dict_var['list_question']
+                print('questioner for {} have been Made'.format(search_data.mapped('email_employee')[0]))
+                dict_var['email_employee'] = search_data.mapped('email_employee')[0]
+                model_ref = 'dev_crm_haus.model_crm_questionare_admin'
+                model = self.env.ref(model_ref, raise_if_not_found=False)
+                ScheduledAction = self.env['ir.cron']
+                converted_hours,converted_minutes,converted_sec = float_to_formatted_time(dict_var['time_schedule'][1])[0],float_to_formatted_time(dict_var['time_schedule'][1])[1],float_to_formatted_time(dict_var['time_schedule'][1])[2]
+                print(converted_hours)
+                print(abs(int(int(converted_hours)-7)))
+                next_execution_date = datetime.today().replace(hour=abs(int(int(converted_hours)-7)), minute=int(converted_minutes)+10, second=int(converted_sec))
+                
+                action = ScheduledAction.create({
+                    'name': '{} Auto Formatted Action {} Sites {}'.format(search_data.mapped('email_employee')[0],dict_var['questionare_name'],dict_var['temporary_location_selection_fields'],dict_var['date_downloaded']),
+                    'model_id': model.id,
+                    'state': 'code',
+                    'code': 'model.auto_missed_function(dict_var={})'.format(dict_var),
+                    'interval_number': 1,  # Set the interval number (e.g., 1 for daily)
+                    'nextcall': next_execution_date.strftime('%Y-%m-%d %H:%M:%S'),
+                    'interval_type': 'minutes',  # Set the interval type (e.g., days, weeks, months, etc.)
+                    'numbercall': 1,  # Set to -1 to run indefinitely or set a specific number for limited runs
+                    'active': True,  # Set to True to activate the scheduled action
                 })
-            print('questioner for {} have been Made'.format(search_data.mapped('email_employee')[0]))
+                print("Passed")
+            else:
+                search_data = self.env['employee.data'].search([('id','=',dict_var['list_user'][i])])
+
+
+                search_data_2_count = self.env['crm.questionare.user'].search_count([('questionare_name_fields', '=', dict_var['questionare_name']),
+                                                                                    ('temporary_location_selection_fields', '=', dict_var['temporary_location_selection_fields']), ('date_of_downloaded', '=', datetime.today()),
+                                                                                    ('email_employee', '=', search_data.mapped('email_employee')[0])])
+
+                search_data_2 = self.env['crm.questionare.user'].search([('questionare_name_fields', '=', dict_var['questionare_name']),
+                                                                                    ('temporary_location_selection_fields', '=', dict_var['temporary_location_selection_fields']), ('date_of_downloaded', '=', datetime.today()),
+                                                                                    ('email_employee', '=', search_data.mapped('email_employee')[0])])
+
+                if search_data_2_count == 0:
+                    self.env['crm.questionare.user'].sudo().create({
+                        'user_fields':int(dict_var['list_user'][i]),
+                        'email_employee':search_data.mapped('email_employee')[0],
+                        'questionare_name_fields': dict_var['questionare_name'],
+                        'temporary_location_selection_fields': dict_var['temporary_location_selection_fields'],
+                        'date_of_downloaded':datetime.today(),
+                        'list_questions_fields': dict_var['list_question']
+                    })
+
+                print('questioner for {} have been Made'.format(search_data.mapped('email_employee')[0]))
+                dict_var['email_employee'] = search_data.mapped('email_employee')[0]
+                model_ref = 'dev_crm_haus.model_crm_questionare_admin'
+                model = self.env.ref(model_ref, raise_if_not_found=False)
+                ScheduledAction = self.env['ir.cron']
+                
+                next_execution_date = dict_var['date_downloaded'].replace(hour=12-7, minute=45, second=0)
+                action = ScheduledAction.create({
+                    'name': '{} Auto Formatted Action {} Sites {} Date {}'.format(search_data.mapped('email_employee')[0],dict_var['questionare_name'],dict_var['temporary_location_selection_fields'],dict_var['date_downloaded']),
+                    'model_id': model.id,
+                    'state': 'code',
+                    'code': 'model.auto_missed_function(dict_var={})'.format(dict_var),
+                    'interval_number': 1,  # Set the interval number (e.g., 1 for daily)
+                    'nextcall': next_execution_date.strftime('%Y-%m-%d %H:%M:%S'),
+                    'interval_type': 'minutes',  # Set the interval type (e.g., days, weeks, months, etc.)
+                    'numbercall': 1,  # Set to -1 to run indefinitely or set a specific number for limited runs
+                    'active': True,  # Set to True to activate the scheduled action
+                })
+                print("Passed")
+    
+    def auto_missed_function(self,dict_var):
+        search_data_2 = self.env['crm.questionare.user'].search([('questionare_name_fields', '=', dict_var['questionare_name']),
+                                                                                    ('temporary_location_selection_fields', '=', dict_var['temporary_location_selection_fields']), ('date_of_downloaded', '=', datetime.today()),
+                                                                                    ('email_employee', '=', dict_var['email_employee'])])
+        for data in search_data_2:
+            if (data.status == 'assigned') or (data.status == 'started'):
+                search_data_2.sudo().write({
+                    'status':'missed_reports'
+                })
 
 class CrmDateSchedule(models.Model):
     _name = "crm.date.schedule"
@@ -716,7 +967,34 @@ class CrmDateSchedule(models.Model):
     _description = "Date Schedule"
     _rec_name = "date_fields"
 
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        res = super(CrmDateSchedule, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            doc = etree.XML(res['arch'])
+            for node in doc.xpath("//field[@name='date_fields']"):
+                min_date = fields.Date.today().strftime('%Y-%m-%d')
+                node.set('options', "{'datepicker': {'minDate': '%sT00:00:00'}}" % min_date)
+            res['arch'] = etree.tostring(doc)
+        return res
+
     id_questioner = fields.Many2one('crm.questionare.admin')
-    date_fields = fields.Date(string="Select Date", required=True)
+    date_fields = fields.Datetime(string="Select Date", required=True)
     questionare_start_time_fields = fields.Float(string="Start Time",required=True)
     questionare_end_time_fields = fields.Float(string="End Time",required=True)
+
+    @api.constrains('questionare_start_time_fields','questionare_end_time_fields','date_fields')
+    def _check_start_end_time(self):
+        for record in self:
+            if record.questionare_start_time_fields > record.questionare_end_time_fields:
+                raise ValidationError("Start time cannot be greater than end time.")
+            print(record.date_fields.date() == datetime.today().date())
+            if record.date_fields.date() == datetime.today().date():
+                    user_timezone = self.env.user.tz or 'UTC'
+                    user_datetime = datetime.now(timezone(user_timezone)).time()
+                    times_final = user_datetime.hour * 3600 + user_datetime.minute * 60 + user_datetime.second
+                    if times_final > record.questionare_start_time_fields:
+                        raise ValidationError('Waktu Mulai Tidak Mungkin')
+                    if times_final > record.questionare_end_time_fields:
+                        raise ValidationError('Waktu Berakhir Tidak Mungkin')

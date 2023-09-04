@@ -8,6 +8,7 @@
             <form>
                 <header>
                     <field name="status" invisible="1" />
+                    <field name="questionare_category_name" invisible="1" force_save="1"/>
                 </header>
                 <sheet>
                     <group>
@@ -18,8 +19,10 @@
                             <field name="timestamp_fields" attrs="{'readonly':[('status','=','submitted')],'invisible':[('schedule_type_fields','!=','timestamp')],'required':[('schedule_type_fields','=','timestamp')]}"/>
                         </group>
                         <group>
-                            <field name="schedule_type_fields"/>
+                            <field name="schedule_type_fields" attrs="{'readonly':[('status','=','submitted')]}"/>
+                            <field name="immediate_assign_fields" attrs="{'invisible':[('schedule_type_fields','!=','timestamp')],'readonly':[('status','=','submitted')]}"/>
                             <field name="temporary_location_selection_fields" string="Location" attrs="{'readonly':[('status','=','submitted')]}"/>
+                            <field name="questionare_category_fields" attrs="{'readonly':[('status','=','submitted')]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -39,9 +42,9 @@
                             </field>
                         </page>
                         <page string='Scheduled Date' name='scheduled date' attrs="{'invisible':[('schedule_type_fields','!=','date')]}">
-                            <field name='date_schedule_fields'>
-                                <tree string='Scheduled Date'>
-                                    <field name="date_fields"/>
+                            <field name='date_schedule_fields' attrs="{'readonly':[('status','=','submitted')]}">
+                                <tree string='Scheduled Date' delete="0" edit="0">
+                                    <field name="date_fields" options="{'datepicker':{'maxDate': 'now'}}"/>
                                     <field name="questionare_start_time_fields"  widget="float_full_time" options="{'round_off': True}"/>
                                     <field name="questionare_end_time_fields"  widget="float_full_time" options="{'round_off': True}"/>
                                 </tree>
@@ -112,7 +115,7 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <group> 
+                    <group>
                         <field name="date_fields"/>
                         <field name="questionare_start_time_fields"  widget="float_full_time" options="{'round_off': True}"/>
                         <field name="questionare_end_time_fields"  widget="float_full_time" options="{'round_off': True}"/>
@@ -121,8 +124,6 @@
             </form>
         </field>
     </record>
-
-
 
     <record id="action_questionare_admin" model="ir.actions.act_window">
         <field name="name">Create Questionare</field>

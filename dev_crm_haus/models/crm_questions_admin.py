@@ -29,11 +29,6 @@ class CrmQuestionsAdmin(models.Model):
         ('text','Text'),
         ('true_false','Benar Atau Salah')
         ],string="Type" ,required = True)
-    questions_yes_no_choice_fields = fields.Selection([
-        ('n_a','N/A'),
-        ('yes','Ya'),
-        ('no','Tidak'),
-        ],string="Pilihan",required=True)
     questions_selection_choice = fields.One2many('crm.selections.answers','questions_id',string="Answers" )
     status = fields.Selection([('drafted','Drafted'),
     ('submitted','Submitted')
