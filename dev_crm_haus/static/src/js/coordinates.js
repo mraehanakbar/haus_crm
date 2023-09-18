@@ -12,8 +12,8 @@ odoo.define("dev_crm_haus.coordinates", function (require) {
       latitude: latitude,
       longitude: longitude,
     };
-    document.getElementById("o_field_input_13").value = latitude;
-    document.getElementById("o_field_input_14").value = longitude;
+    // document.getElementById("o_field_input_13").value = latitude;
+    // document.getElementById("o_field_input_14").value = longitude;
 
     console.log(latitude, longitude);
   }
