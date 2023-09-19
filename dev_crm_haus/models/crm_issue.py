@@ -1,5 +1,5 @@
 from email.policy import default
-import math
+from math import radians, sin, cos, acos
 import requests
 from requests import get
 from odoo import api, fields, models, http, _
@@ -629,6 +629,29 @@ class CrmIssue(models.Model):
             mail_id.sudo().send()
             assigned_user.append([email_data,name_data])
 
+        # User Coordinates
+    latitude = fields.Float("latitude", digits=(16, 5))
+    longitude = fields.Float("longitude", digits=(16, 5))
+
+    is_near_one_km = fields.Boolean(default=True)
+
+    @api.depends('latitude', 'longitude')
+    def _compute_isnear(self):
+        for i in range(len(site_list["name"])):
+            if self.temporary_location_selection == site_list["name"][0]:
+                index = i
+                break
+        xlat = radians(float(self.latitude))
+        xlon = radians(float(self.longitude))
+        ylat = radians(float(site_list["location"][index][0]))
+        ylon = radians(float(site_list["location"][index][1]))
+        dist = 6371.01 * acos(sin(xlat)*sin(ylat) + cos(xlat)*cos(ylat)*cos(xlon - ylon))
+
+        if dist > 1:
+            self.is_near_one_km = False
+        else:
+            self.is_near_one_km = True
+
 class CrmActivityCheckin(models.Model):
     _name = "crm.activity.checkin"
     _description = "CRM Group Of assigned Users"
@@ -684,3 +707,5 @@ class CrmActivityCheckin(models.Model):
             self.current_assigned_user_login = True
         else:
             self.current_assigned_user_login = False
+
+

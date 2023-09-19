@@ -47,6 +47,7 @@
                 <header>
                     <field name="check_is_reporter_login" invisible="1"/>
                     <field name="issue_status" invisible="1"/>
+                    <field name="is_near_one_km" string="is near one km?" invisible="0"/>
                 </header>
                 <sheet>
                     <group>
@@ -71,7 +72,7 @@
                     <notebook>
                         <page string="Issue Check-In" name="issue_check_in">
                             <group>
-                                <field name="issue_checkin"  attrs="{'readonly':['|',('state','=','solved'),('state','=','not_solved')]}">
+                                <field name="issue_checkin"  attrs="{'readonly':['|',('state','=','solved'),'|',('state','=','not_solved'),('is_near_one_km','=',False)]}">
                                     <tree string="Issue Check-In" delete="false">
                                         <field name="involved_employee" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                                         <field name="involved_employee_status"/>

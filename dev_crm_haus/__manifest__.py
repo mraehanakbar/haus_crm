@@ -26,6 +26,12 @@
         'views/menu.xml',
     ],
 
+    'assets': {
+        'web.assets_backend': [
+        'dev_crm_haus/static/**/*',
+    ],
+    },
+
     'demo': [],
     'qweb': [],
     'installable': True,
