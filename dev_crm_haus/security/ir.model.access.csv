@@ -11,3 +11,4 @@ access_crm_selections_answers,access.crm.selections.answers,model_crm_selections
 access_crm_date_schedule,access.crm.date.schedule,model_crm_date_schedule,,1,1,1,1
 access_download_report_questionare,access.download.report.questionare,model_download_report_questionare,,1,1,1,1
 access_download_report_questionare_missed,access.download.report.questionare.missed,model_download_report_questionare_missed,,1,1,1,1
+access_download_report_issue,access.download.report.issue,model_download_report_issue,,1,1,1,1

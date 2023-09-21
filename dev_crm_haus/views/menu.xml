@@ -49,7 +49,6 @@
     />
 
 
-
     <menuitem
         id="crm_reporting_master"
         name="Reporting"
@@ -71,6 +70,14 @@
         parent="crm_reporting_master"
         action="action_download_report_missed_questionare"
         sequence="2"
+    />
+
+    <menuitem
+        id="crm_questionare_download_issue"
+        name="Questionare Download Issue"
+        parent="crm_reporting_master"
+        action="action_download_report_issue"
+        sequence="3"
     />
 
     <menuitem
