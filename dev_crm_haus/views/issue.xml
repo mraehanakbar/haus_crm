@@ -47,7 +47,7 @@
                 <header>
                     <field name="check_is_reporter_login" invisible="1"/>
                     <field name="issue_status" invisible="1"/>
-                    <field name="is_near_one_km" string="is near one km?" invisible="0"/>
+                    <field name="is_near_one_km" string="is near one km?" invisible="1" readonly="1"/>
                 </header>
                 <sheet>
                     <group>
@@ -58,7 +58,7 @@
                             <field name="issue_due_date" attrs="{'readonly':[('issue_status','=','submitted')]}" string="Due Date"></field>
                             <field name="issue_created_date" force_save="1"/>
                             <field name="priority" attrs="{'readonly':[('issue_status','=','submitted')]}" string="Priority"></field>
-                            <field name="state" string="Status" attrs="{'readonly':['|',('state','=','solved'),('state','=','not_solved')]}"></field>
+                            <field name="state" string="Status" attrs="{'readonly':['|',('state','=','solved'),'|',('state','=','not_solved'),(('is_near_one_km','>',1))]}"></field>
                         </group>
                         <group>
                             <field name="temporary_location_selection" attrs="{'readonly':[('issue_status','=','submitted')]}"></field>
@@ -72,7 +72,7 @@
                     <notebook>
                         <page string="Issue Check-In" name="issue_check_in">
                             <group>
-                                <field name="issue_checkin"  attrs="{'readonly':['|',('state','=','solved'),'|',('state','=','not_solved'),('is_near_one_km','=',False)]}">
+                                <field name="issue_checkin"  attrs="{'readonly':['|',('state','=','solved'),('state','=','not_solved')]}">
                                     <tree string="Issue Check-In" delete="false">
                                         <field name="involved_employee" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                                         <field name="involved_employee_status"/>
