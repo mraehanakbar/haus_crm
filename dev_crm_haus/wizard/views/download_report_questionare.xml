@@ -75,11 +75,7 @@
                     </group>
 
                     <group>
-                        <field name="temporary_location_selection_fields" />
-                        <field name="start_date_created_date_issue_fields" />
-                        <field name="end_date_created_date_issue_fields" />
-                        <field name="start_date_solved_date_issue_fields" />
-                        <field name="end_date_solved_date_issue_fields" />
+                        <field name="temporary_location_selection" />
                     </group>
                 </group>
                 <footer>

@@ -584,7 +584,7 @@ class DownloadReportIssue(models.TransientModel):
     _inherit = []
     _description = "download report of issue"
 
-    temporary_location_selection_fields = fields.Selection(
+    temporary_location_selection = fields.Selection(
         site_list, string="Sites Selection", default="Haus Office Meruya")
     start_date_created_date_issue_fields = fields.Date(
         string='Start Date Created Issue')
@@ -649,7 +649,7 @@ class DownloadReportIssue(models.TransientModel):
             'end_date_created': ('issue_created_date', '<=', self.end_date_created_date_issue_fields),
             'start_date_solved': ('issue_solved_date', '>=', self.start_date_solved_date_issue_fields),
             'end_date_solved': ('issue_solved_date', '<=', self.end_date_solved_date_issue_fields),
-            'sites_questioner': ('temporary_location_selection_fields', '=', self.temporary_location_selection),
+            'sites_questioner': ('temporary_location_selection', '=', self.temporary_location_selection),
             'issue_name': ('issue_problem', '=', self.issue_problem_name),
             'departement_user_reporter': ('department_reporter', '=', self.organization_employee_reporter),
             'status_fields': ('state', '=', self.state),
@@ -700,40 +700,17 @@ class DownloadReportIssue(models.TransientModel):
         if search_data:
             self.data_available = True
             for data in search_data:
-                questioner_name = data.questionare_name_fields
+                reporter_employee = data.reporter_name
                 search_user = self.env['employee.data'].search(
-                    [('email_employee', '=', data.email_employee)])
-                questioner_user = search_user.mapped('first_name_employee')[0]
-                questioner_date_assigned = data.date_of_downloaded
-                questioner_status = data.status
-                questioner_category = data.questionare_category_fields
-                questioner_sites = data.temporary_location_selection_fields
-                questioner_user_departement = data.user_departement
+                    [('email_employee', '=', data.reporter_email)])
+                temporary_location_selection = data.temporary_location_selection
+                questioner_state = data.state
 
-                for questions in data.list_questions_fields:
-                    questioner_type_questions = questions.questions_type_fields
-                    question_audit = questions.question_audit_fields
-
-                    if questioner_type_questions == 'pilihan_ganda':
-                        try:
-                            answers = questions.mapped('questions_selection_choice').mapped(
-                                'answers_selections')[0]
-                            print(answers)
-                        except:
-                            answers = "Not Answered"
-                            print(answers)
-                    elif questioner_type_questions == "text":
-                        answers = questions.answer_audit_fields
-                    elif questioner_type_questions == "true_false":
-                        answers = questions.questions_yes_no_choice_fields
-
-                    data_to_export.append({'Questioner': questioner_name,
-                                           'User': questioner_user,
-                                           'Date': questioner_date_assigned,
-                                           'Sites': questioner_sites,
-                                           'Departement': questioner_user_departement,
-                                           'Status': questioner_status,
-                                           })
+                data_to_export.append({'Issue': data.issue_problem,
+                                       'User': reporter_employee,
+                                       'Sites': temporary_location_selection,
+                                       'Status': data.state,
+                                       })
 
             csv_data = ''
             if data_to_export:
