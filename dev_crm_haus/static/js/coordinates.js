@@ -1,7 +1,7 @@
 odoo.define("dev_crm_haus.coordinates", function (require) {
   "use strict";
   // Print out console if javascript file works
-  console.log("LOADED");
+  // console.log("LOADED");
 
   // Get Odoo View Controller and rpc
   var FormController = require("web.FormController");
@@ -10,8 +10,10 @@ odoo.define("dev_crm_haus.coordinates", function (require) {
   FormController.include({
     // Function executed on save
     _onEdit: function () {
+      // Check the current model
       if (this.modelName == "crm.issue") {
-        console.log("onEdit");
+        // Check if onEdit function works
+        // console.log("onEdit");
         var self = this;
         var sup = this._super();
 
@@ -28,7 +30,8 @@ odoo.define("dev_crm_haus.coordinates", function (require) {
                 latitude,
                 longitude,
               };
-              console.log(coords);
+              // Check location from user
+              // console.log(coords);
               // Write record
               rpc
                 .query({
@@ -70,10 +73,20 @@ odoo.define("dev_crm_haus.coordinates", function (require) {
             function (error) {
               if (error.code === error.PERMISSION_DENIED) {
                 // The user denied location access. Show a message or UI element explaining why it's needed.
-                console.error("Please Allow Location Access");
+                self.displayNotification({
+                  type: "warning",
+                  title: "WARNING",
+                  message: "Please reload page and allow for location access",
+                  sticky: true,
+                });
               } else {
                 // Handle other errors
-                console.error("Error getting location:", error.message);
+                self.displayNotification({
+                  type: "warning",
+                  title: "Error",
+                  message: "Error getting location",
+                  sticky: true,
+                });
               }
             }
           );
