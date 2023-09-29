@@ -8,23 +8,22 @@
             <form>
                 <group>
                     <group>
-                        <field name="list_questionare_fields" />
-                        <field name="temporary_location_selection_fields" />
-                        <field name="organization_employee" />
-                        <field name="name_assigned_user_fields" />
+                        <field name="list_questionare_fields"/>
+                        <field name="temporary_location_selection_fields"/>
+                        <field name="organization_employee"/>
+                        <field name="name_assigned_user_fields"/>
                     </group>
 
                     <group>
-                        <field name="start_date_created_date_fields" />
-                        <field name="end_date_created_date_fields" />
-                        <field name="start_date_submited_date_fields" />
-                        <field name="end_date_submited_date_fields" />
+                        <field name="start_date_created_date_fields"/>
+                        <field name="end_date_created_date_fields"/>
+                        <field name="start_date_submited_date_fields"/>
+                        <field name="end_date_submited_date_fields"/>
                     </group>
                 </group>
                 <footer>
-                    <button id="download_questionare_report_complete"
-                        name="download_csv_file_completed_report" string="Download" type="object"
-                        class="btn-primary" />
+                    <button id="download_questionare_report_complete" name="download_csv_file_completed_report"  string="Download" type="object" 
+                        class="btn-primary"/>
                 </footer>
             </form>
         </field>
@@ -38,55 +37,24 @@
             <form>
                 <group>
                     <group>
-                        <field name="list_questionare_fields" />
-                        <field name="temporary_location_selection_fields" />
-                        <field name="organization_employee" />
-                        <field name="name_assigned_user_fields" />
+                        <field name="list_questionare_fields"/>
+                        <field name="temporary_location_selection_fields"/>
+                        <field name="organization_employee"/>
+                        <field name="name_assigned_user_fields"/>
                     </group>
 
                     <group>
-                        <field name="start_date_created_date_fields" />
-                        <field name="end_date_created_date_fields" />
+                        <field name="start_date_created_date_fields"/>
+                        <field name="end_date_created_date_fields"/>
                     </group>
                 </group>
                 <footer>
-                    <button id="download_questionare_report_missed_complete"
-                        name="download_csv_file_missed_report" string="Download" type="object"
-                        class="btn-primary" />
+                    <button id="download_questionare_report_missed_complete" name="download_csv_file_missed_report"  string="Download" type="object" 
+                        class="btn-primary"/>
                 </footer>
             </form>
         </field>
     </record>
-
-    <record id="download_report_issue_form" model="ir.ui.view">
-        <field name="name">download.report.issue.form</field>
-        <field name="model">download.report.issue</field>
-        <field name="arch" type="xml">
-            <form>
-                <group>
-                    <group>
-                        <field name="reporter_employee" />
-                        <field name="assigned_employee" />
-                        <field name="organization_employee_reporter" />
-                        <field name="organization_employee_assigned_user" />
-                        <field name="state" />
-                        <field name="issue_problem" />
-                        <field name="issue_problem_name" />
-                    </group>
-
-                    <group>
-                        <field name="temporary_location_selection" />
-                    </group>
-                </group>
-                <footer>
-                    <button id="download_issue"
-                        name="download_csv_file_issue" string="Download" type="object"
-                        class="btn-primary" />
-                </footer>
-            </form>
-        </field>
-    </record>
-
 
     <!-- Action -->
     <record id="action_download_report_questionare" model="ir.actions.act_window">
@@ -97,18 +65,11 @@
         <field name="target">new</field>
     </record>
 
+
     <record id="action_download_report_missed_questionare" model="ir.actions.act_window">
         <field name="name">Download Form Questionare Missed</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">download.report.questionare.missed</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-    </record>
-
-    <record id="action_download_report_issue" model="ir.actions.act_window">
-        <field name="name">Download Form Issue</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">download.report.issue</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
