@@ -14,6 +14,24 @@
         </field>
     </record>
 
+
+    <record id="view_crm_group_assigned_issue_form" model="ir.ui.view">
+        <field name="name">crm.group.assigned.issue.form</field>
+        <field name="model">crm.group.assigned.issue</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="assigned_employee"/>
+                        <field name="assigned_email" force_save="1" invisible="1"/>
+                        <field name="assigned_name" force_save="1" invisible="1"/>
+                        <field name="department" force_save="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="view_crm_activity_checkin_form" model="ir.ui.view">
         <field name="name">crm.activity.checkin.form</field>
         <field name="model">crm.activity.checkin</field>
@@ -23,7 +41,6 @@
                     <group>
                         <field name="current_assigned_user_login" invisible="1"/>
                         <group>
-                            <field name="reporter_issue_email" invisible="1" force_save="1"/>
                             <field name="involved_employee" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                             <field name="involved_employee_desc" attrs="{'readonly':[('current_assigned_user_login','=',False)]}"/>
                         </group>
@@ -46,47 +63,40 @@
             <form>
                 <header>
                     <field name="check_is_reporter_login" invisible="1"/>
-                    <field name="issue_status" invisible="1"/>
                     <field name="is_near_one_km" string="is near one km?" invisible="1" readonly="1"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
-                            <field name="reporter_name" string="Reporter Name" force_save="1"></field>
+                            <field name="reporter_name" string="Reporter Name"></field>
                             <field name="reporter_email" force_save="1"></field>
                             <field name="department_reporter" string="Department Reporter"></field>
-                            <field name="issue_due_date" attrs="{'readonly':[('issue_status','=','submitted')]}" string="Due Date"></field>
-                            <field name="issue_created_date" force_save="1"/>
-                            <field name="priority" attrs="{'readonly':[('issue_status','=','submitted')]}" string="Priority"></field>
-                            <field name="state" string="Status" attrs="{'readonly':['|',('state','=','solved'),'|',('state','=','not_solved'),(('is_near_one_km','>',1))]}"></field>
+                            <field name="issue_due_date" attrs="{'readonly':[('check_is_reporter_login','=',False)]}" string="Due Date"></field>
+                            <field name="priority" attrs="{'readonly':[('check_is_reporter_login','=',False)]}" string="Priority"></field>
+                            <field name="state" string="Status" attrs="{'readonly':[('is_near_one_km','>',1)]}"></field>
+                            <field name="assigned_employee">
+                                <tree string="Assigned Employee">
+                                    <field name="assigned_employee"/>
+                                    <field name="department"/>
+                                </tree>
+                            </field>
                         </group>
                         <group>
-                            <field name="temporary_location_selection" attrs="{'readonly':[('issue_status','=','submitted')]}"></field>
-                            <field name="issue_problem" string="Issues" attrs="{'readonly':[('issue_status','=','submitted')]}" />
-                            <field name="issue_category" string="Category" attrs="{'readonly':[('issue_status','=','submitted')]}" options="{'no_open': True}" />
-                            <field name="issue_attachment" string="Attachment" attrs="{'readonly':[('issue_status','=','submitted')]}" />
-                            <field name="detail_of_issue" string="Details Of Issue" attrs="{'readonly':[('issue_status','=','submitted')]}"/>
-                            <field name="issue_solved_date" force_save="1"/>
+                            <field name="temporary_location_selection" attrs="{'readonly':[('check_is_reporter_login','=',False)]}"></field>
+                            <field name="issue_problem" string="Issues" attrs="{'readonly':[('check_is_reporter_login','=',False)]}" />
+                            <field name="issue_category" string="Category" attrs="{'readonly':[('check_is_reporter_login','=',False)]}" options="{'no_open': True}" />
+                            <field name="issue_attachment" string="Attachment" attrs="{'readonly':[('check_is_reporter_login','=',False)]}" />
+                            <field name="detail_of_issue" string="Details Of Issue" attrs="{'readonly':[('check_is_reporter_login','=',False)]}"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Issue Check-In" name="issue_check_in">
                             <group>
-                                <field name="issue_checkin"  attrs="{'readonly':['|',('state','=','solved'),('state','=','not_solved')]}">
+                                <field name="issue_checkin">
                                     <tree string="Issue Check-In" delete="false">
                                         <field name="involved_employee" options="{'no_quick_create':True,'no_create_edit':True,'no_open': True}"/>
                                         <field name="involved_employee_status"/>
                                         <field name="involved_employee_desc"/>
-                                    </tree>
-                                </field>
-                            </group>
-                        </page>
-                        <page string="List Assigned Users" name="list_assigned_user">
-                            <group>
-                                <field name="assigned_employee"  attrs="{'readonly':['|',('state','=','solved'),('state','=','not_solved')]}"> 
-                                    <tree string="Assigned Employee">
-                                        <field name="first_name_employee"/>
-                                        <field name="organization_employee"/>
                                     </tree>
                                 </field>
                             </group>
@@ -117,7 +127,7 @@
     <record model="ir.actions.server" id="action_requested_list"> 
         <field name="name">Requested Issue</field> 
         <field name="model_id" ref="dev_crm_haus.model_crm_issue"/> 
-        <field name="state">code</field> 
+        <field name="state" >code</field> 
         <field name="code"> 
             action = model.sudo().issue_requested_list() 
         </field> 
