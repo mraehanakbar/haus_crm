@@ -23,6 +23,7 @@
                 <sheet>
                     <group>
                         <field name="name" string="Category"/>
+                        <field name="category_priority" string = "Priority"/>
                     </group>
                 </sheet>
             </form>
@@ -35,6 +36,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name" string="Category"/>
+                <field name="category_priority" string = "Priority"/>
             </tree>
         </field>
     </record>

@@ -22,7 +22,7 @@
         'views/log.xml',
         'views/questionare_admin.xml',
         'views/questionare_user.xml',
-        'wizard/views/download_report_questionare.xml',
+        'wizard/views/download_questionare.xml',
         'views/menu.xml',
     ],
 

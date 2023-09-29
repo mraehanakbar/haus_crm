@@ -3,7 +3,7 @@ from math import radians, sin, cos, acos
 import requests
 from requests import get
 from odoo import api, fields, models, http, _
-from datetime import datetime, timedelta
+from datetime import datetime
 from odoo.exceptions import ValidationError
 
 site_list = {
@@ -501,179 +501,23 @@ class CrmIssue(models.Model):
 
     @api.model
     def create(self, vals):
-        assigned_user = []
-        vals['issue_status'] = 'submitted'
-        vals['state'] = 'open'
-        vals['issue_created_date'] = datetime.today()
-        """
-        if len(vals['assigned_employee'][0][2]) < 1:
-            raise ValidationError("Harus Setidaknya ada User Yang di assign")
-        """
-        try:
-            results = vals['assigned_employee'][0][2]
-            for i in range(len(results)):
-                search_data = self.env['employee.data'].search(
-                    [('id', '=', results[i])])
-                email_data = search_data.mapped('email_employee')[0]
-                name_data = search_data.mapped('first_name_employee')[0]
-                template_data = {
-                    'subject': 'Haus Questioner CRM',
-                    'body_html': 'Hai {}, Kamu Telah Mendapat Issue {} oleh {}'.format(name_data, vals['issue_problem'], vals['reporter_name']),
-                    'email_from': 'erphaus@gmail.com',
-                    'auto_delete': True,
-                    'email_to': email_data,
-                }
-                mail_id = self.env['mail.mail'].sudo().create(template_data)
-                mail_id.sudo().send()
-                assigned_user.append([email_data, name_data])
-
-            scheduled_list = {
-                'list_involved_user': assigned_user,
-                'reporter_name': vals['reporter_name'],
-                'reporter_email': vals['reporter_email'],
-                'issues': vals['issue_problem'],
-                'due_date': vals['issue_due_date'],
-                'category': self.env['crm.category'].search([('id', '=', vals['issue_category'])]).name,
-                'sites_selection': vals['temporary_location_selection'],
-            }
-
-            model_ref = 'dev_crm_haus.model_crm_issue'
-            model = self.env.ref(model_ref, raise_if_not_found=False)
-            ScheduledAction = self.env['ir.cron']
-            due_date_str = scheduled_list['due_date']
-            due_date_format = '%Y-%m-%d %H:%M:%S'
-            due_date = datetime.strptime(due_date_str, due_date_format)
-            next_call = due_date - timedelta(1)
-
-            action = ScheduledAction.create({
-                'name': 'auto overdue issue {} by {} category {} sites {}'.format(scheduled_list['issues'], scheduled_list['reporter_name'], scheduled_list['category'], scheduled_list['sites_selection']),
-                        'model_id': model.id,
-                        'state': 'code',
-                        'code': 'model.sending_auto_overdue(dict_var={})'.format(scheduled_list),
-                        # Set the interval number (e.g., 1 for daily)
-                        'interval_number': 1,
-                        'nextcall': scheduled_list['due_date'],
-                        # Set the interval type (e.g., days, weeks, months, etc.)
-                        'interval_type': 'minutes',
-                        'numbercall': 1,  # Set to -1 to run indefinitely or set a specific number for limited runs
-                        'active': True,  # Set to True to activate the scheduled action
-            })
-            second_action = ScheduledAction.create({
-                'name': 'overdue reminder issue {} by {} category {} sites {}'.format(scheduled_list['issues'], scheduled_list['reporter_name'], scheduled_list['category'], scheduled_list['sites_selection']),
-                        'model_id': model.id,
-                        'state': 'code',
-                        'code': 'model.sending_reminder_due_date(dict_var={})'.format(scheduled_list),
-                        # Set the interval number (e.g., 1 for daily)
-                        'interval_number': 1,
-                        'nextcall': next_call,
-                        # Set the interval type (e.g., days, weeks, months, etc.)
-                        'interval_type': 'minutes',
-                        'numbercall': 1,  # Set to -1 to run indefinitely or set a specific number for limited runs
-                        'active': True,  # Set to True to activate the scheduled action
-            })
-
-        except:
-            pass
         res = super(CrmIssue, self).create(vals)
-        return res
-
-    def write(self, vals):
-        old_user = self.assigned_employee.mapped('email_employee')
-        assigned_user = []
-        try:
-            if vals['assigned_employee']:
-                results = vals['assigned_employee'][0][2]
-                for i in range(len(results)):
-                    search_data = self.env['employee.data'].search(
-                        [('id', '=', results[i])])
-                    email_data = search_data.mapped('email_employee')[0]
-                    name_data = search_data.mapped('first_name_employee')[0]
-                    if email_data not in old_user:
-                        template_data = {
-                            'subject': 'Haus Questioner CRM',
-                            'body_html': 'Hai {}, Kamu Telah Mendapat Issue {} oleh {}'.format(name_data, self.issue_problem, self.reporter_name),
-                            'email_from': 'erphaus@gmail.com',
-                            'auto_delete': True,
-                            'email_to': email_data,
-                        }
-                        mail_id = self.env['mail.mail'].sudo().create(
-                            template_data)
-                        mail_id.sudo().send()
-                    assigned_user.append([email_data, name_data])
-
-                    scheduled_list = {
-                        'list_involved_user': assigned_user,
-                        'reporter_name': self.reporter_name,
-                        'reporter_email': self.reporter_email,
-                        'issues': self.issue_problem,
-                        'due_date': self.issue_due_date,
-                        'category': self.issue_category.name,
-                        'sites_selection': self.temporary_location_selection,
-                    }
-                    cron_search_overdue = self.env['ir.cron'].search([('name', '=', 'auto overdue issue {} by {} category {} sites {}'.format(
-                        self.issue_problem, self.reporter_name, self.issue_category.name, self.temporary_location_selection))])
-                    if cron_search_overdue:
-                        cron_search_overdue.write({
-                            'code': 'model.sending_auto_overdue(dict_var={})'.format(scheduled_list),
-                        })
-                    cron_search_overdue_reminder = self.env['ir.cron'].search([('name', '=', 'overdue reminder issue {} by {} category {} sites {}'.format(
-                        self.issue_problem, self.reporter_name, self.issue_category.name, self.temporary_location_selection))])
-
-        except:
-            pass
-
-        try:
-            if vals['state'] == 'solved':
-                vals['issue_solved_date'] = datetime.today()
-                if self.env.user.login == self.reporter_email:
-                    template_data = {
-                        'subject': 'Haus Questioner CRM',
-                        'body_html': 'Hai {}, Issue anda yang Bernama {} Telah Solved oleh {}'.format(user.first_name_employee, self.issue_problem, self.env.user.name),
-                        'email_from': 'erphaus@gmail.com',
-                        'auto_delete': True,
-                        'email_to': self.reporter_email,
-                    }
-                    mail_id = self.env['mail.mail'].sudo().create(
-                        template_data)
-                    mail_id.sudo().send()
-                    assigned_user.append([email_data, name_data])
-
-                for user in assigned_employee:
-                    template_data = {
-                        'subject': 'Haus Questioner CRM',
-                        'body_html': 'Hai {}, Issue {} Telah Solved oleh {}'.format(user.first_name_employee, self.issue_problem, self.env.user.name),
-                        'email_from': 'erphaus@gmail.com',
-                        'auto_delete': True,
-                        'email_to': user.email_employee,
-                    }
-                    mail_id = self.env['mail.mail'].sudo().create(
-                        template_data)
-                    mail_id.sudo().send()
-                    assigned_user.append([email_data, name_data])
-        except:
-            pass
-
-        print(self.assigned_employee)
-        res = super(CrmIssue, self).write(vals)
+        if not vals.get('assigned_employee'):
+            raise ValidationError("Tidak Ada User Yang Di Assign")
         return res
 
     # Define Some Fields Or Function Here
-    issue_problem = fields.Char(required=True)
+    issue_problem = fields.Char(String="Problem", required=True)
     issue_category = fields.Many2one(
         "crm.category", String="Category", required=True)
-    issue_due_date = fields.Datetime(string="Due Date")
-    issue_created_date = fields.Date(string="Created Date", readonly=True)
-    issue_solved_date = fields.Date(string="Solved Date", readonly=True)
+
+    issue_due_date = fields.Datetime(String="Due Date")
     issue_comment = fields.Text(String="Comment")
     issue_attachment = fields.Binary("Attachment", attachment=True)
-    assigned_employee = fields.Many2many(
-        'employee.data', string="Assigned Users", domain="[('current_status_employee','=','Active')]", required=True)
-    issue_checkin = fields.One2many(
-        'crm.activity.checkin', 'id_issue', string="Issue Checkin")
-    issue_status = fields.Selection(
-        [('drafted', 'Drafted'), ('submitted', 'Submitted')], default='drafted')
-    # Tambahin fungsi get_name_user
-
+    assigned_employee = fields.One2many('crm.group.assigned.issue','id_issue',string="Assigned Users")
+    issue_checkin = fields.One2many('crm.activity.checkin','id_issue',string="Issue Checkin")
+    
+    #Tambahin fungsi get_name_user
     def get_name_user(self):
         try:
             search_data = self.env['employee.data'].search(
@@ -692,6 +536,10 @@ class CrmIssue(models.Model):
             return position
         except:
             return ''
+    
+    #Tambahin nama user (first_name + last_name)
+    reporter_name = fields.Char(String="Reporter Name", readonly=True ,default=get_name_user)
+    department_reporter = fields.Char(String="Halo", readonly=True ,default=get_department_user)
 
     def get_email(self):
         try:
@@ -709,8 +557,8 @@ class CrmIssue(models.Model):
         String="Reporter Department", readonly=True, default=get_department_user)
     reporter_email = fields.Char(
         String="Reporter Email", readonly=True, default=get_email)
-    check_is_reporter_login = fields.Boolean(
-        string="is reporter login", compute="get_user_login_reporter", default=True)
+    check_is_reporter_login = fields.Boolean(string="is reporter login", compute="get_user_login_reporter", default=True)
+
     temporary_location_selection = fields.Selection(site_list['name'],
                                                     string="Sites Selection", default="Haus Office Meruya", required=True)
 
@@ -718,7 +566,7 @@ class CrmIssue(models.Model):
         [('0', 'Not Important'), ('1', 'Low'), ('2', 'Medium'), ('3', 'High')], string='Priority', default='1', required=True)
 
     state = fields.Selection(
-        [('open', 'Open'), ('not_solved', 'Not Solved'), ('solved', 'Solved'), ('overdue', 'Overdue')], default='open', string="State", required=True)
+        [('not_solved', 'Not Solved'), ('solved', 'Solved')], default='not_solved', string="State",required=True)
     detail_of_issue = fields.Text(string="Details Of Issue")
 
     # kirim email notifikasi ketika issue dibuat
@@ -788,8 +636,8 @@ class CrmIssue(models.Model):
             "help": "No Request Yet !!!",
             "res_model": self._name,
             "view_mode": "tree,form",
-            "domain": [('assigned_employee.email_employee', '=', self.env.user.login)],
-            "context": {'delete': False, 'create': False},
+            "domain": [('assigned_employee.assigned_email', '=', self.env.user.login),('state', '=', 'not_solved')],
+            "context": {'delete': False,'create':False},
         }
 
     def your_requested_issue_list(self):
@@ -799,46 +647,11 @@ class CrmIssue(models.Model):
             "help": "No Request Yet !!!",
             "res_model": self._name,
             "view_mode": "tree,form",
-            "domain": [('reporter_email', '=', self.env.user.login)],
-            "context": {},
+            "domain": [('reporter_email', '=', self.env.user.login),('state', '=', 'not_solved')],
+            "context": {'delete': False},
         }
 
-    def sending_auto_overdue(self, dict_var):
-        search_data = self.env['crm.issue'].search([('issue_problem', '=', dict_var['issues']), ('reporter_name', '=', dict_var['reporter_name']),
-                                                    ('reporter_email', '=', dict_var['reporter_email']), ('reporter_name', '=', dict_var['reporter_name']), (
-                                                        'issue_category.name', '=', dict_var['category']), ('issue_due_date', '=', dict_var['due_date']),
-                                                    ('temporary_location_selection', '=', dict_var['sites_selection'])])
-
-        if search_data:
-            search_data.write({
-                'state': 'overdue'
-            })
-        for involved_user in dict_data['list_involved_user']:
-            template_data = {
-                'subject': 'Haus Questioner CRM',
-                'body_html': '{}, issue {} telah Overdue'.format(involved_user[1], dict_var['issues']),
-                'email_from': 'erphaus@gmail.com',
-                'auto_delete': True,
-                'email_to': involved_user[0],
-            }
-            mail_id = self.env['mail.mail'].sudo().create(template_data)
-            mail_id.sudo().send()
-            assigned_user.append([email_data, name_data])
-
-    def sending_reminder_due_date(self, dict_var):
-        for involved_user in dict_data['list_involved_user']:
-            template_data = {
-                'subject': 'Haus Questioner CRM',
-                'body_html': '{}, issue {} Akan Overdue besok harap cek issue yang di assign kan ke anda'.format(involved_user[1], dict_var['issues']),
-                'email_from': 'erphaus@gmail.com',
-                'auto_delete': True,
-                'email_to': involved_user[0],
-            }
-            mail_id = self.env['mail.mail'].sudo().create(template_data)
-            mail_id.sudo().send()
-            assigned_user.append([email_data, name_data])
-
-        # User Coordinates
+    # User Coordinates
     latitude = fields.Float("latitude", digits=(16, 5))
     longitude = fields.Float("longitude", digits=(16, 5))
 
@@ -860,40 +673,35 @@ class CrmIssue(models.Model):
 
 
         self.is_near_one_km = dist
-        # if dist > 1:
-        #     self.is_near_one_km = False
-        # else:
-        #     self.is_near_one_km = True
 
+class CrmGroupAssignedIssue(models.Model):
+    _name = "crm.group.assigned.issue"
+    _description = "CRM Group Of assigned Users"
+    _rec_name = "assigned_employee"
+
+    @api.model
+    def create(self,vals):
+        print(vals['assigned_name'])
+        res = super(CrmGroupAssignedIssue, self).create(vals)
+        return res
+
+    id_issue = fields.Many2one('crm.issue')
+    issue_name = fields.Char(related="id_issue.issue_problem")
+    assigned_employee = fields.Many2one("employee.data", String="Employee", domain=lambda self: [('email_employee','!=',self.env.user.login),('current_status_employee','=','Active')], defaults = lambda self: self.env.user, required=True)
+    assigned_name = fields.Char(related="assigned_employee.first_name_employee")
+    assigned_email = fields.Char(related="assigned_employee.email_employee")
+    department = fields.Selection(string="Departement", related='assigned_employee.organization_employee')
+    email_employee = fields.Char(string="Email Employee", related='assigned_employee.email_employee')
+    has_been_notified =  fields.Boolean(string="Is The User Have Been Notifed Before")
+    
+    _sql_constraints = [('assigned_employee', 'unique (assigned_employee)', 'Dont Add Multiple Same Users'),]
+
+   
 
 class CrmActivityCheckin(models.Model):
     _name = "crm.activity.checkin"
     _description = "CRM Group Of assigned Users"
     _rec_name = "involved_employee"
-
-    def write(self, vals):
-        try:
-            vals['involved_employee_status']
-        except:
-            vals['involved_employee_status'] = self.involved_employee_status
-
-        if vals['involved_employee_status'] == 'done':
-            search_data = self.env['employee.data'].search(
-                [('id', '=', self.involved_employee.id)])
-            user_name = search_data.first_name_employee
-
-            send_email_to = self.reporter_issue_email
-            template_data = {
-                'subject': 'Haus Questioner CRM',
-                'body_html': '{} Telah Menyelesaikan Checkin Issue {}'.format(user_name, self.issue_name),
-                'email_from': 'erphaus@gmail.com',
-                'auto_delete': True,
-                'email_to': send_email_to,
-            }
-            mail_id = self.env['mail.mail'].sudo().create(template_data)
-            mail_id.sudo().send()
-        rec = super(CrmActivityCheckin, self).create(vals)
-        return rec
 
     def get_current_user(self):
         data = self.env['employee.data'].search(
@@ -901,25 +709,18 @@ class CrmActivityCheckin(models.Model):
         return data
 
     id_issue = fields.Many2one('crm.issue')
-    reporter_issue_email = fields.Char(related='id_issue.reporter_email')
     issue_name = fields.Char(related="id_issue.issue_problem")
-    involved_employee = fields.Many2one(
-        "employee.data", string="Employee", default=get_current_user, readonly=True)
-    involved_employee_name = fields.Char(
-        related='involved_employee.first_name_employee')
-    involved_employee_email = fields.Char(
-        related='involved_employee.email_employee')
+    involved_employee = fields.Many2one("employee.data", string="Employee", default=get_current_user, readonly=True)
+    involved_employee_email = fields.Char(related='involved_employee.email_employee')
     involved_employee_desc = fields.Text(string="Description")
     involved_employee_attachments = fields.Binary(
         string='Attachments', attachment=True)
     file_involved_employee_attachments = fields.Char("File Name")
     involved_employee_status = fields.Selection([
-        ('done', 'Done'),
-        ('ongoing', 'Ongoing'),
-        ('not_done', 'Not Done'),
-    ], string="Status Of Checkin", required=True)
-    current_assigned_user_login = fields.Boolean(
-        string='is user login?', compute='_is_current_assigned_user_login')
+        ('done','Done'),
+        ('not_done','Not Done'),
+    ], string="Status Of Checkin")
+    current_assigned_user_login = fields.Boolean(string='is user login?',compute='_is_current_assigned_user_login')
 
     @api.depends('involved_employee_email')
     def _is_current_assigned_user_login(self):
