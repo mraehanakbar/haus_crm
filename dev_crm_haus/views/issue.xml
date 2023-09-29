@@ -63,6 +63,7 @@
             <form>
                 <header>
                     <field name="check_is_reporter_login" invisible="1"/>
+                    <field name="is_near_one_km" string="is near one km?" invisible="1" readonly="1"/>
                 </header>
                 <sheet>
                     <group>
@@ -72,7 +73,7 @@
                             <field name="department_reporter" string="Department Reporter"></field>
                             <field name="issue_due_date" attrs="{'readonly':[('check_is_reporter_login','=',False)]}" string="Due Date"></field>
                             <field name="priority" attrs="{'readonly':[('check_is_reporter_login','=',False)]}" string="Priority"></field>
-                            <field name="state" string="Status"></field>
+                            <field name="state" string="Status" attrs="{'readonly':[('is_near_one_km','>',1)]}"></field>
                             <field name="assigned_employee">
                                 <tree string="Assigned Employee">
                                     <field name="assigned_employee"/>
@@ -126,7 +127,7 @@
     <record model="ir.actions.server" id="action_requested_list"> 
         <field name="name">Requested Issue</field> 
         <field name="model_id" ref="dev_crm_haus.model_crm_issue"/> 
-        <field name="state">code</field> 
+        <field name="state" >code</field> 
         <field name="code"> 
             action = model.sudo().issue_requested_list() 
         </field> 
