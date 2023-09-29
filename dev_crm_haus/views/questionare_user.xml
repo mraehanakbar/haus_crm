@@ -6,41 +6,23 @@
         <field name="model">crm.questionare.user</field>
         <field name="arch" type="xml">
             <form>
-                <header>
-                    <button id="check_in_button_questioner" name="check_in_times"  string="Check-In" type="object" 
-                    class="btn-primary" attrs="{'invisible':[('status','!=','assigned')]}"/>
-                </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="questionare_name_fields" string="Questionare Name" readonly="1"/>
-                            <field name="status" readonly="1"/>
-                            <field name="date_of_downloaded" readonly="1"/>
-                            <field name="number_of_answered_fields" readonly="1" force_save="1"/>
-                            <field name="number_of_not_answered_fields" readonly="1" force_save="1"/>
-                            <field name="user_departement" readonly="1" force_save="1"/>
-                            <field name="evidence_fields" attrs="{'readonly':['|',('status','=','assigned'),'|',('status','=','completed_reports'),('status','=','missed_reports')]}"/>
-                        </group>
-                        <group>
-                            <field name="user_local_time" readonly="1" force_save="1" widget="float_full_time" options="{'round_off': True}" invisible="1"/>
-                            <field name="check_in_time_fields" widget="float_full_time" options="{'round_off': True}" readonly="1" force_save="1"/>
-                            <field name="check_out_time_fields" widget="float_full_time" options="{'round_off': True}" readonly="1" force_save="1"/>
-                            <field name="temporary_location_selection_fields" readonly="1"/>
-                            <field name="submitted_date" readonly="1"/>
-                            <field name="questionare_start_time_fields" string = "Waktu Mulai Pengisian" readonly="1" widget="float_full_time" options="{'round_off': True}"/>
-                            <field name="questionare_end_time_fields" string = "Waktu Selesai Pengisian" readonly="1" widget="float_full_time" options="{'round_off': True}"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="List Of Questions" name="list of questions">
-                            <field name="list_questions_fields" attrs="{'readonly':['|',('status','=','assigned'),'|',('status','=','completed_reports'),('status','=','missed_reports')]}">
+                            <field name="list_questions_fields" >
                                 <tree string="List Of Question" delete="false" create="false">
                                     <field name="question_audit_fields" />
-                                    <field name="question_answered_fields" />
                                 </tree>
                             </field>
-                        </page>
-                    </notebook>
+                        </group>
+                        <group>
+                            <field name="temporary_location_selection_fields" readonly="1"/>
+                            <field name="user_local_time" string = "Waktu Anda Saat Ini" readonly="1" widget="float_full_time" options="{'round_off': True}"/>
+                            <field name="questionare_start_time_fields" string = "Waktu Mulai" readonly="1" widget="float_full_time" options="{'round_off': True}"/>
+                            <field name="questionare_end_time_fields" string = "Waktu Selesai" readonly="1" widget="float_full_time" options="{'round_off': True}"/>
+                        </group>
+                    </group>
                 </sheet>
             </form>
         </field>
@@ -67,14 +49,11 @@
                         <group> 
                             <field name="question_audit_fields" readonly = "1"/>
                             <field name="questions_type_fields" readonly = "1"/>
-                            <field name="question_answered_fields"  force_save="1"/>
                         </group>
                         <group>
                             <field name="answer_audit_fields" attrs="{'invisible':[('questions_type_fields','!=','text')]}"/>
                             <field name="questions_yes_no_choice_fields" attrs="{'invisible':[('questions_type_fields','!=','true_false')]}"/>
                             <field name="questions_selection_choice" attrs="{'invisible':[('questions_type_fields','!=','pilihan_ganda')]}" options="{'no_create': True, 'no_create_edit':True}" widget="radio"/>
-                            <field name="comment_fields" attrs="{'invisible':['|',('questions_type_fields','!=','pilihan_ganda'),('questions_type_fields','=','true_false'),'|',('questions_type_fields','=','pilihan_ganda'),('questions_type_fields','!=','true_false')],'required':[('questions_yes_no_choice_fields','=','no')]}" />
-                            <field name="attachments_fields" attrs="{'required':[('questions_yes_no_choice_fields','=','no')]}"/>
                         </group>
                     </sheet>
                 </form>

@@ -9,5 +9,9 @@ class CrmCategory(models.Model):
     _rec_name = "name"
     
     #Define Some Fields Or Function Here
-    name = fields.Char(String="Issue Name", tracking=True)
-    description = fields.Text(String="Category Explaination")
+    name = fields.Char(String="Name", tracking=True)
+    category_priority = fields.Selection([
+        ('high', 'High'),
+        ('medium', 'Medium'),
+        ('low', 'Low')
+    ], string="Priority")
